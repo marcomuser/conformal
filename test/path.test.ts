@@ -84,6 +84,12 @@ describe("setPath", () => {
     });
   });
 
+  it("should handle empty path safely", () => {
+    let initial = { a: 1 };
+    initial = setPath(initial, "", "val");
+    expect(initial).toStrictEqual({ a: 1 });
+  });
+
   it("creating objects", () => {
     type TestObj = { a?: { b?: { c?: { d: string } } } };
     let initial: TestObj = {};

@@ -57,6 +57,10 @@ export function setPath<TObj extends UnknownRecord, TPath extends string, TVal>(
   path: TPath,
   value: TVal,
 ): TObj {
+  if (path.trim() === "") {
+    return obj;
+  }
+
   return setByKey(
     obj != null ? obj : ({} as TObj),
     getAllKeysFromPath(path),
@@ -68,17 +72,26 @@ function setByKey<TObj extends AnyRecord>(
   obj: TObj,
   splittedKeys: string[],
   value: unknown,
-) {
+): TObj | any[] {
+  if (splittedKeys.length === 0) {
+    return obj;
+  }
+
   const key = splittedKeys[0];
+  const nextKey = splittedKeys[1];
+
+  if (!key) {
+    return obj;
+  }
 
   if (
     key === "__proto__" ||
-    (key === "constructor" && splittedKeys[1] === "prototype")
+    (key === "constructor" && nextKey === "prototype")
   ) {
     return obj;
   }
 
-  const copy = Array.isArray(obj) ? [...obj] : { ...obj };
+  const copy: AnyRecord = Array.isArray(obj) ? [...obj] : { ...obj };
   if (splittedKeys.length === 1) {
     if (value === undefined || value === null) {
       if (Array.isArray(copy)) {
@@ -87,12 +100,15 @@ function setByKey<TObj extends AnyRecord>(
         delete copy[key];
       }
     } else {
-      copy[key as any] = value;
+      copy[key] = value;
     }
     return copy;
   }
-  ensureKey(copy, key, splittedKeys[1]);
-  copy[key as any] = setByKey(copy[key as any], splittedKeys.slice(1), value);
+
+  if (nextKey) {
+    ensureKey(copy, key, nextKey);
+    copy[key] = setByKey(copy[key], splittedKeys.slice(1), value);
+  }
   return copy;
 }
 
@@ -103,8 +119,13 @@ function getAllKeysFromPath(path: string): string[] {
 const ARRAY_INDEX = /(.*)\[(\d+)\]/;
 function getKeyAndIndicesFromKey(key: string): string[] {
   if (ARRAY_INDEX.test(key)) {
-    const [, keyPart, index] = key.match(ARRAY_INDEX) ?? [];
-    return [...getKeyAndIndicesFromKey(keyPart), index];
+    const match = key.match(ARRAY_INDEX);
+    if (match) {
+      const [, keyPart, index] = match;
+      if (keyPart && index) {
+        return [...getKeyAndIndicesFromKey(keyPart), index];
+      }
+    }
   }
   return [key];
 }

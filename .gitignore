@@ -1,3 +1,6 @@
+# build
+dist/
+
 # dev
 .vscode/*
 !.vscode/launch.json

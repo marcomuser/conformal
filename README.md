@@ -21,37 +21,48 @@ npm install conformal
 
 ### Parsing with Schema
 
-The `parseWithSchema` function parses and validates [FormData](https://developer.mozilla.org/docs/Web/API/FormData) against a [Standard Schema](https://standardschema.dev). It internally uses the `parse` function to first convert the `FormData` into a structured object before applying schema validation.
+The `parseWithSchema` function parses and validates [FormData](https://developer.mozilla.org/docs/Web/API/FormData) against a [Standard Schema](https://standardschema.dev). It internally uses the `parse` function (see below) to first convert the `FormData` into a structured object before applying schema validation.
 
-```typescript
-import { parseWithSchema } from "conformal";
-import { z } from "zod";
+```html
+<body>
+  <form id="userForm">
+    <input type="text" name="user.name" placeholder="Name" />
+    <input type="number" name="user.age" placeholder="Age" />
+    <input type="text" name="user.hobbies[0]" placeholder="Hobby 1" />
+    <input type="text" name="user.hobbies[1]" placeholder="Hobby 2" />
+    <button type="submit">Submit</button>
+  </form>
 
-const schema = z.object({
-  user: z.object({
-    name: z.string(),
-    age: z.coerce.number(),
-    hobbies: z.array(z.string()),
-  }),
-});
+  <script type="module">
+    import { parseWithSchema } from "conformal";
+    import { z } from "zod";
 
-const formData = new FormData();
-formData.append("user.name", "John Doe");
-formData.append("user.age", "30");
-formData.append("user.hobbies[0]", "Music");
-formData.append("user.hobbies[1]", "Coding");
+    const schema = z.object({
+      user: z.object({
+        name: z.string(),
+        age: z.coerce.number(),
+        hobbies: z.array(z.string()),
+      }),
+    });
 
-const result = parseWithSchema(schema, formData);
-if (result.success) {
-  console.log(result.value); // { user: { name: 'John Doe', age: 30, hobbies: ['Music', 'Coding'] } }
-} else {
-  console.log(result.issues); // Validation errors
-}
+    const form = document.getElementById("userForm");
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const formData = new FormData(form);
+      const result = parseWithSchema(schema, formData);
+      if (result.success) {
+        console.log(result.value); // { user: { name: 'John Doe', age: 30, hobbies: ['Music', 'Coding'] } }
+      } else {
+        console.log(result.issues); // Validation errors
+      }
+    });
+  </script>
+</body>
 ```
 
 ### Parsing FormData
 
-The `parse` function allows you to convert a `FormData` object into a structured object with typed values. It supports both dot notation for nested objects and square bracket notation for arrays.
+The `parse` function allows you to convert a `FormData` object into a structured object with typed values. It supports both dot notation for nested objects and square bracket notation for arrays. You can mix dot and square bracket notation to create complex structures.
 
 ```typescript
 import { parse } from "conformal";

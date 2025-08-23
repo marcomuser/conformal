@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { parse } from "../src/parse.js";
+import { z } from "zod";
+import { parse, parseWithSchema } from "../src/parse.js";
 
 describe("parse", () => {
   it("should handle simple key-value pairs", () => {
@@ -160,5 +161,140 @@ describe("parse", () => {
       emptyValue: "",
       nested: { emptyValue: "", items: ["first", "second"] },
     });
+  });
+});
+
+describe("parseWithSchema", () => {
+  it("should return success result when validation passes", () => {
+    const schema = z.object({
+      name: z.string(),
+      age: z.coerce.number(),
+      hobbies: z.array(z.string()),
+    });
+
+    const formData = new FormData();
+    formData.append("name", "John Doe");
+    formData.append("age", "30");
+    formData.append("hobbies", "Music");
+    formData.append("hobbies", "Coding");
+
+    const result = parseWithSchema(schema, formData);
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.value).toEqual({
+        name: "John Doe",
+        age: 30,
+        hobbies: ["Music", "Coding"],
+      });
+    }
+  });
+
+  it("should return failure result when validation fails", () => {
+    const schema = z.object({
+      name: z.string(),
+      age: z.number(), // Note: not coerced, so string will fail
+      email: z.email(),
+    });
+
+    const formData = new FormData();
+    formData.append("name", "John Doe");
+    formData.append("age", "not-a-number");
+    formData.append("email", "invalid-email");
+
+    const result = parseWithSchema(schema, formData);
+
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.issues).toBeDefined();
+      expect(result.issues.length).toBeGreaterThan(0);
+      expect(result.value).toBeUndefined();
+    }
+  });
+
+  it("should handle nested object validation", () => {
+    const schema = z.object({
+      user: z.object({
+        profile: z.object({
+          name: z.string(),
+          age: z.coerce.number(),
+        }),
+      }),
+    });
+
+    const formData = new FormData();
+    formData.append("user.profile.name", "Jane");
+    formData.append("user.profile.age", "25");
+
+    const result = parseWithSchema(schema, formData);
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.value).toEqual({
+        user: {
+          profile: {
+            name: "Jane",
+            age: 25,
+          },
+        },
+      });
+    }
+  });
+
+  it("should throw TypeError when schema validation returns a Promise", () => {
+    // Create a mock schema that returns a Promise
+    const asyncSchema = {
+      "~standard": {
+        validate: () => Promise.resolve({ value: {}, issues: undefined }),
+      },
+    };
+
+    const formData = new FormData();
+    formData.append("name", "test");
+
+    expect(() => {
+      parseWithSchema(asyncSchema as any, formData);
+    }).toThrow(TypeError);
+    expect(() => {
+      parseWithSchema(asyncSchema as any, formData);
+    }).toThrow("Schema validation must be synchronous");
+  });
+
+  it("should handle array validation", () => {
+    const schema = z.object({
+      items: z.array(z.string().min(1)),
+    });
+
+    const formData = new FormData();
+    formData.append("items", "apple");
+    formData.append("items", "banana");
+    formData.append("items", "cherry");
+
+    const result = parseWithSchema(schema, formData);
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.value).toEqual({
+        items: ["apple", "banana", "cherry"],
+      });
+    }
+  });
+
+  it("should return failure for array validation with invalid items", () => {
+    const schema = z.object({
+      items: z.array(z.string().min(3)), // Minimum length 3
+    });
+
+    const formData = new FormData();
+    formData.append("items", "ok"); // Too short
+    formData.append("items", "valid");
+
+    const result = parseWithSchema(schema, formData);
+
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.issues).toBeDefined();
+      expect(result.issues.length).toBeGreaterThan(0);
+    }
   });
 });

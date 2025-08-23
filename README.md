@@ -21,27 +21,29 @@ npm install conformal
 
 ### Parsing with Schema
 
-The `parseWithSchema` function parses and validates [FormData](https://developer.mozilla.org/docs/Web/API/FormData) against a [Standard Schema](https://standardschema.dev/).
+The `parseWithSchema` function parses and validates [FormData](https://developer.mozilla.org/docs/Web/API/FormData) against a [Standard Schema](https://standardschema.dev). It internally uses the `parse` function to first convert the `FormData` into a structured object before applying schema validation.
 
 ```typescript
 import { parseWithSchema } from "conformal";
 import { z } from "zod";
 
 const schema = z.object({
-  name: z.string(),
-  age: z.coerce.number(),
-  hobbies: z.array(z.string()),
+  user: z.object({
+    name: z.string(),
+    age: z.coerce.number(),
+    hobbies: z.array(z.string()),
+  }),
 });
 
 const formData = new FormData();
-formData.append("name", "John Doe");
-formData.append("age", "30");
-formData.append("hobbies", "Music");
-formData.append("hobbies", "Coding");
+formData.append("user.name", "John Doe");
+formData.append("user.age", "30");
+formData.append("user.hobbies[0]", "Music");
+formData.append("user.hobbies[1]", "Coding");
 
 const result = parseWithSchema(schema, formData);
 if (result.success) {
-  console.log(result.value); // { name: 'John Doe', age: 30, hobbies: ['Music', 'Coding'] }
+  console.log(result.value); // { user: { name: 'John Doe', age: 30, hobbies: ['Music', 'Coding'] } }
 } else {
   console.log(result.issues); // Validation errors
 }
@@ -49,21 +51,28 @@ if (result.success) {
 
 ### Parsing FormData
 
-The `parse` function allows you to convert a `FormData` object into a structured object with typed values.
+The `parse` function allows you to convert a `FormData` object into a structured object with typed values. It supports both dot notation for nested objects and square bracket notation for arrays.
 
 ```typescript
 import { parse } from "conformal";
 
 const formData = new FormData();
-formData.append("name", "John Doe");
-formData.append("age", "30");
-formData.append("hobbies", "Music");
-formData.append("hobbies", "Coding");
+formData.append("user.name", "John Doe");
+formData.append("user.age", "30");
+formData.append("user.address.street", "123 Main St");
+formData.append("user.address.city", "Anytown");
+formData.append("user.hobbies[0]", "Music");
+formData.append("user.hobbies[1]", "Coding");
 
-const result = parse<{ name: string; age: string; hobbies: string[] }>(
-  formData,
-);
-// Returns { name: 'John Doe', age: '30', hobbies: ['Music', 'Coding'] }
+const result = parse<{
+  user: {
+    name: string;
+    age: string;
+    address: { street: string; city: string };
+    hobbies: string[];
+  };
+}>(formData);
+// Returns { user: { name: 'John Doe', age: '30', address: { street: '123 Main St', city: 'Anytown' }, hobbies: ['Music', 'Coding'] } }
 ```
 
 ### Serialization

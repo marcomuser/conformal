@@ -44,6 +44,7 @@ export function getPath<T extends AnyRecord, K extends PathsFromObject<T>>(
  *
  * @param obj Any object.
  * @param path Path splitted by dots and `[]`. Like: `props.arr[1].nested`.
+ * @param value Value to set.
  * @returns The new object.
  *
  * @example

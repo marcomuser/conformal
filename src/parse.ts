@@ -1,6 +1,7 @@
+import type { StandardSchemaV1 } from "@standard-schema/spec";
 import type { UnknownRecord } from "type-fest";
 import { setPath } from "./path.js";
-import type { AnyRecord, ParsedValue } from "./types.js";
+import type { AnyRecord, ParsedValue, SchemaResult } from "./types.js";
 
 /**
  * Parses a `FormData` object into a structured object with typed values.
@@ -33,4 +34,26 @@ export function parse<FormValues extends AnyRecord = UnknownRecord>(
   }
 
   return formValues as ParsedValue<FormValues>;
+}
+
+export function parseWithSchema<T extends StandardSchemaV1>(
+  schema: T,
+  formData: FormData,
+): SchemaResult<StandardSchemaV1.InferOutput<T>> {
+  const input = parse(formData);
+  const result = schema["~standard"].validate(input);
+
+  if (result instanceof Promise) {
+    throw new TypeError("Schema validation must be synchronous");
+  }
+
+  return result.issues
+    ? {
+        success: false,
+        issues: result.issues,
+      }
+    : {
+        success: true,
+        value: result.value,
+      };
 }

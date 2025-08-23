@@ -33,9 +33,11 @@
     "@types/node": "^24.3.0",
     "prettier": "^3.6.2",
     "typescript": "^5.9.2",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "zod": "^4.0.17"
   },
   "dependencies": {
+    "@standard-schema/spec": "^1.0.0",
     "type-fest": "^4.41.0"
   }
 }

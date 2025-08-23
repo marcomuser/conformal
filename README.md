@@ -2,6 +2,18 @@
 
 Conformal is a TypeScript library designed to simplify the handling of form data and object manipulation in web applications. It provides utilities for parsing `FormData` into structured objects, validating them against schemas, and serializing values for use in HTML forms. This library is ideal for developers who need a robust solution for managing form data in a type-safe manner.
 
+### Table of Contents
+
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Parsing with Standard Schema](#parsing-with-standard-schema)
+  - [Parsing FormData](#parsing-formdata)
+  - [Serialization](#serialization)
+  - [Path Utilities](#path-utilities)
+- [Example: React Server Actions](#example-react-server-actions)
+- [License](#license)
+
 ## Features
 
 - **Typed FormData Parsing**: Parse `FormData` into structured objects with typed values, eliminating the need to work with untyped form values.

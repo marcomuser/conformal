@@ -111,7 +111,7 @@ const result = {
 
 ### Serialization
 
-The `serialize` function transforms values for use in HTML form elements.
+The `serialize` function transforms values for use in HTML form elements. It is particularly useful for setting default values in form fields, especially when integrating with a backend to pre-fill forms with existing data. By converting various data types into a format suitable for HTML attributes, `serialize` ensures that values are correctly displayed in form elements.
 
 ```typescript
 import { serialize } from "conformal";
@@ -124,6 +124,8 @@ console.log(serialize({ username: "test", age: 100 })); // { username: "test", a
 ```
 
 ### Path Utilities
+
+The path utilities, `getPath` and `setPath`, are foundational tools for handling object paths using dot and square bracket notation. They are particularly useful for developers looking to build custom client-side validation libraries. These functions enshrine the contract for dot and square bracket notation, making them essential for managing complex data structures.
 
 #### Get Path
 
@@ -138,7 +140,7 @@ const value = getPath({ a: { b: { c: ["hey", "Hi!"] } } }, "a.b.c[1]");
 
 #### Set Path
 
-Set a value in an object using a path.
+Set a value in an object using a path. The `setPath` function is used internally by the `parse` function.
 
 ```typescript
 import { setPath } from "conformal";

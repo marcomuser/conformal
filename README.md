@@ -4,10 +4,13 @@ Conformal is a TypeScript library designed to simplify the handling of form data
 
 ## Features
 
-- **Parse FormData**: Convert `FormData` into structured objects with typed values.
-- **Schema Validation**: Validate parsed data against a schema using `parseWithSchema`.
-- **Path Utilities**: Get and set deep values in objects using dot and bracket notation.
-- **Serialization**: Serialize values for use in HTML form elements.
+- **Typed FormData Parsing**: Parse `FormData` into structured objects with typed values, eliminating the need to work with untyped form values.
+
+- **Schema Validation**: Validate parsed data against a schema using `parseWithSchema`. This ensures that your form data adheres to expected structures and types, reducing runtime errors and ensuring data integrity.
+
+- **Serialization**: Transform values for use in HTML form elements, making it easy to set default values from backend data. This feature is ideal for pre-filling forms in editing scenarios.
+
+- **Path Utilities**: Utilize `getPath` and `setPath` to manage deep values in objects using dot and bracket notation. These utilities are essential for developers building custom client-side validation libraries or complex data manipulation patterns.
 
 ## Installation
 
@@ -147,6 +150,64 @@ import { setPath } from "conformal";
 
 const newObj = setPath({ a: { b: { c: [] } } }, "a.b.c[1]", "hey");
 // Returns { a: { b: { c: [<empty>, 'hey'] } } }
+```
+
+## Example: React Server Actions
+
+Handling form data in React applications often involves dealing with untyped `FormData` objects, which can lead to runtime errors and cumbersome data handling. Here's a simple example of a React action without type safety:
+
+```tsx
+async function submitAction(formData) {
+  "use server";
+  const name = formData.get("name"); // File | string | null
+  const age = formData.get("age"); // File | string | null
+  console.log({ name, age });
+}
+
+export function Form() {
+  return (
+    <form action={submitAction}>
+      <input name="name" />
+      <input name="age" />
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+```
+
+By introducing `parseWithSchema`, you can ensure that the form data is parsed and validated against a schema, ensuring that form data adheres to expected types and structures:
+
+```tsx
+import { parseWithSchema } from "conformal";
+import { z } from "zod";
+
+const schema = z.object({
+  name: z.string(),
+  age: z.coerce.number(),
+});
+
+async function submitAction(formData) {
+  "use server";
+  const result = parseWithSchema(schema, formData);
+
+  if (!result.success) {
+    return "Form not valid";
+  }
+
+  const name = result.value.name; // string
+  const age = result.value.age; // number
+  console.log({ name, age });
+}
+
+export function Form() {
+  return (
+    <form action={submitAction}>
+      <input name="name" />
+      <input name="age" />
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
 ```
 
 ## License

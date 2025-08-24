@@ -50,7 +50,7 @@ The `parseWithSchema` function parses and validates [FormData](https://developer
 
   <script type="module">
     import { parseWithSchema } from "conformal";
-    import { z } from "zod";
+    import * as z from "zod";
 
     const schema = z.object({
       name: z.string(),
@@ -164,6 +164,24 @@ const newObj = setPath({ a: { b: { c: [] } } }, "a.b.c[1]", "hey");
 // Returns { a: { b: { c: [<empty>, 'hey'] } } }
 ```
 
+#### Extract Paths From Object Type
+
+Extract all possible paths from an object type while automatically excluding paths that lead to browser-specific built-in types such as Blob, FileList, and Date. This type utility is useful for creating abstractions that enable type-safe access to specific fields within complex form data structures.
+
+```typescript
+import type { PathsFromObject } from "conformal";
+
+interface UserForm {
+  user: {
+    name: string;
+    contacts: { type: string; value: string }[];
+  };
+}
+
+type Paths = PathsFromObject<UserForm>;
+// Paths will be "user" | "user.name" | "user.contacts" | `user.contacts[${number}]` | `user.contacts[${number}].type` | `user.contacts[${number}].value`
+```
+
 ## Example: React Server Actions
 
 Handling form data in React applications often involves dealing with untyped `FormData` objects, which can lead to runtime errors and cumbersome data handling. Here's a simple example of a React action without type safety:
@@ -191,7 +209,7 @@ By introducing `parseWithSchema`, you can ensure that the form data is parsed an
 
 ```tsx
 import { parseWithSchema } from "conformal";
-import { z } from "zod";
+import * as z from "zod";
 
 const schema = z.object({
   name: z.string(),

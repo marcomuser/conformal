@@ -2,11 +2,18 @@
   "name": "conformal",
   "version": "1.0.0",
   "description": "Conform FormData into structured, strongly-typed objects.",
+  "keywords": [
+    "formdata",
+    "schema",
+    "typescript"
+  ],
   "type": "module",
   "sideEffects": false,
   "files": [
     "dist"
   ],
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.js",
   "exports": {
     "types": "./dist/index.d.ts",
     "default": "./dist/index.js"

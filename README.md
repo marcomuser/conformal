@@ -174,12 +174,13 @@ import type { PathsFromObject } from "conformal";
 interface UserForm {
   user: {
     name: string;
+    profilePicture: File;
     contacts: { type: string; value: string }[];
   };
 }
 
 type Paths = PathsFromObject<UserForm>;
-// Paths will be "user" | "user.name" | "user.contacts" | `user.contacts[${number}]` | `user.contacts[${number}].type` | `user.contacts[${number}].value`
+// Paths will be "user" | "user.name" | "user.profilePicture" | "user.contacts" | `user.contacts[${number}]` | `user.contacts[${number}].type` | `user.contacts[${number}].value`
 ```
 
 ## Example: React Server Actions

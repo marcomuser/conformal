@@ -13,11 +13,13 @@
   },
   "scripts": {
     "build": "tsc",
+    "changeset": "npx changeset",
     "format:check": "prettier . --check",
     "format:write": "prettier . --write",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "version": "npm run build && changeset version && npm i"
   },
   "repository": {
     "type": "git",

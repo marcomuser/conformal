@@ -36,5 +36,5 @@ jobs:
           commit: "[ci] release"
           title: "[ci] release"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_CONFORMAL }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -1,3 +1,4 @@
+import type { StandardSchemaV1 } from "@standard-schema/spec";
 import type { Get, Paths, UnknownRecord } from "type-fest";
 
 export type ParsedValue<Value> = Value extends Date | number | bigint
@@ -77,3 +78,12 @@ export type Submission<Input = UnknownRecord, Output = UnknownRecord> =
       /** Form-level validation errors. */
       readonly formErrors: ReadonlyArray<string>;
     };
+
+export type SchemaResult<T extends StandardSchemaV1> = StandardSchemaV1.Result<
+  StandardSchemaV1.InferOutput<T>
+> & {
+  submission: () => Submission<
+    ParsedValue<StandardSchemaV1.InferOutput<T>>,
+    StandardSchemaV1.InferOutput<T>
+  >;
+};

@@ -1,7 +1,8 @@
 import type { StandardSchemaV1 } from "@standard-schema/spec";
 import type { UnknownRecord } from "type-fest";
 import { setPath } from "./path.js";
-import type { AnyRecord, ParsedValue } from "./types.js";
+import { toSubmission } from "./submission.js";
+import type { AnyRecord, ParsedValue, SchemaResult } from "./types.js";
 
 /**
  * Parses a `FormData` object into a structured object with typed values.
@@ -70,7 +71,7 @@ export function parse<FormValues extends AnyRecord = UnknownRecord>(
 export function parseWithSchema<T extends StandardSchemaV1>(
   schema: T,
   formData: FormData,
-): StandardSchemaV1.Result<StandardSchemaV1.InferOutput<T>> {
+): SchemaResult<T> {
   const input = parse(formData);
   const result = schema["~standard"].validate(input);
 
@@ -79,7 +80,9 @@ export function parseWithSchema<T extends StandardSchemaV1>(
   }
 
   return {
-    value: result.issues ? undefined : result.value,
-    issues: result.issues,
+    ...result,
+    submission() {
+      return toSubmission<StandardSchemaV1.InferOutput<T>>(input, result);
+    },
   };
 }

@@ -53,3 +53,16 @@ export type SchemaResult<Output> =
       readonly success: false;
       readonly value?: undefined;
     });
+
+export interface Submission<Output, Input> {
+  /** The outcome of the last submission. */
+  readonly status: "idle" | "success" | "error";
+  /** The typed output value. Only present if `status === "success"`. */
+  readonly value?: Output;
+  /** The raw user input as submitted. */
+  readonly input: Input;
+  /** Field-specific validation errors. */
+  readonly fieldErrors: Record<PathsFromObject<Output>, string | undefined>;
+  /** Form-level validation errors. */
+  readonly formErrors: ReadonlyArray<string>;
+}

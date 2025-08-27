@@ -9,5 +9,6 @@ export function toSubmission<Output>(
   return {
     input: input as ParsedValue<Output>,
     value: result.issues ? undefined : result.value,
+    status: result.issues ? "error" : "success",
   };
 }

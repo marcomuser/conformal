@@ -1,4 +1,4 @@
-import type { Get, Paths } from "type-fest";
+import type { Get, Paths, UnknownRecord } from "type-fest";
 
 export type ParsedValue<Value> = Value extends Date | number | bigint
   ? string
@@ -46,15 +46,34 @@ export type GetFromObject<
 
 export type AnyRecord = Record<PropertyKey, any>;
 
-export interface Submission<Input, Output> {
-  /** The outcome of the last submission. */
-  readonly status: "idle" | "success" | "error";
-  /** The typed output value. Only present if `status === "success"`. */
-  readonly value?: Output;
-  /** The raw user input as submitted. */
-  readonly input: Input;
-  /** Field-specific validation errors. */
-  readonly fieldErrors: Record<PathsFromObject<Output>, string | undefined>;
-  /** Form-level validation errors. */
-  readonly formErrors: ReadonlyArray<string>;
-}
+export type Submission<Input = UnknownRecord, Output = UnknownRecord> =
+  | {
+      /** The outcome of the last submission. */
+      readonly status: "success";
+      /** The typed output value. Only present if `status === "success"`. */
+      readonly value: Output;
+      /** The raw user input as submitted. */
+      readonly input: Input;
+      /** Field-specific validation errors. */
+      readonly fieldErrors: Record<
+        PathsFromObject<Output>,
+        string[] | undefined
+      >;
+      /** Form-level validation errors. */
+      readonly formErrors: ReadonlyArray<string>;
+    }
+  | {
+      /** The outcome of the last submission. */
+      readonly status: "idle" | "error";
+      /** The typed output value. Only present if `status === "success"`. */
+      readonly value?: undefined;
+      /** The raw user input as submitted. */
+      readonly input: Input;
+      /** Field-specific validation errors. */
+      readonly fieldErrors: Record<
+        PathsFromObject<Output>,
+        string[] | undefined
+      >;
+      /** Form-level validation errors. */
+      readonly formErrors: ReadonlyArray<string>;
+    };

@@ -46,7 +46,7 @@ export type GetFromObject<
 
 export type AnyRecord = Record<PropertyKey, any>;
 
-export interface Submission<Output, Input> {
+export interface Submission<Input, Output> {
   /** The outcome of the last submission. */
   readonly status: "idle" | "success" | "error";
   /** The typed output value. Only present if `status === "success"`. */

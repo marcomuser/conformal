@@ -1,4 +1,3 @@
-import type { StandardSchemaV1 } from "@standard-schema/spec";
 import type { Get, Paths } from "type-fest";
 
 export type ParsedValue<Value> = Value extends Date | number | bigint
@@ -46,13 +45,6 @@ export type GetFromObject<
 > = Get<BaseType, Path, { strict: true }>;
 
 export type AnyRecord = Record<PropertyKey, any>;
-
-export type SchemaResult<Output> =
-  | (StandardSchemaV1.SuccessResult<Output> & { readonly success: true })
-  | (StandardSchemaV1.FailureResult & {
-      readonly success: false;
-      readonly value?: undefined;
-    });
 
 export interface Submission<Output, Input> {
   /** The outcome of the last submission. */

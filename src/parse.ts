@@ -45,12 +45,12 @@ export function parse<FormValues extends AnyRecord = UnknownRecord>(
  *
  * @example
  * ```ts
- * import { z } from 'zod';
+ * import * as z from 'zod';
  *
  * const schema = z.object({
  *   name: z.string(),
  *   age: z.coerce.number(),
- *   hobbies: z.array(z.string())
+ *   hobbies: z.string().array(),
  * });
  *
  * const formData = new FormData();

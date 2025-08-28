@@ -1,5 +1,5 @@
 import type { StandardSchemaV1 } from "@standard-schema/spec";
-import type { Get, Paths, UnknownRecord } from "type-fest";
+import type { Get, PartialDeep, Paths, UnknownRecord } from "type-fest";
 
 export type ParsedValue<Value> = Value extends Date | number | bigint
   ? string
@@ -54,12 +54,9 @@ export type Submission<Input = UnknownRecord, Output = UnknownRecord> =
       /** The typed output value. Only present if `status === "success"`. */
       readonly value: Output;
       /** The raw user input as submitted. */
-      readonly input: Input;
+      readonly input: PartialDeep<Input>;
       /** Field-specific validation errors. */
-      readonly fieldErrors: Record<
-        PathsFromObject<Output>,
-        string[] | undefined
-      >;
+      readonly fieldErrors: Partial<Record<PathsFromObject<Output>, string[]>>;
       /** Form-level validation errors. */
       readonly formErrors: ReadonlyArray<string>;
     }
@@ -69,12 +66,9 @@ export type Submission<Input = UnknownRecord, Output = UnknownRecord> =
       /** The typed output value. Only present if `status === "success"`. */
       readonly value?: undefined;
       /** The raw user input as submitted. */
-      readonly input: Input;
+      readonly input: PartialDeep<Input>;
       /** Field-specific validation errors. */
-      readonly fieldErrors: Record<
-        PathsFromObject<Output>,
-        string[] | undefined
-      >;
+      readonly fieldErrors: Partial<Record<PathsFromObject<Output>, string[]>>;
       /** Form-level validation errors. */
       readonly formErrors: ReadonlyArray<string>;
     };

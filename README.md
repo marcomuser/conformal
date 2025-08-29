@@ -57,6 +57,8 @@ npm install conformal
 
 The `parseWithSchema` function parses and validates [FormData](https://developer.mozilla.org/docs/Web/API/FormData) against a [Standard Schema](https://standardschema.dev). It internally uses the [parse](#parse) function to first convert the `FormData` into a structured object before applying schema validation.
 
+**🚀 Try it yourself**: This example includes an import map and can be run directly in a browser!
+
 ```html
 <body>
   <form id="userForm">

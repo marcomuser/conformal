@@ -1,6 +1,6 @@
 # Conformal
 
-Conformal is a TypeScript library designed to simplify the handling of form data and object manipulation in web applications. It provides utilities for parsing `FormData` into structured objects, validating them against schemas, and serializing values for use in HTML forms. The library also exports useful types like `Submission` and `PathsFromObject` for advanced use cases. This library is ideal for developers who need a robust solution for managing form data in a type-safe manner.
+Conformal is a TypeScript library designed to simplify the handling of form data and object manipulation in web applications. It provides utilities for parsing `FormData` into structured objects, validating them against schemas, and serializing values for use in HTML forms. The library also exports useful types like `Submission` and `PathsFromObject` for advanced use cases. This library is ideal for developers who need a robust solution for managing form data submissions in a type-safe manner.
 
 ### Table of Contents
 

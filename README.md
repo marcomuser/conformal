@@ -8,12 +8,12 @@ Conformal is a TypeScript library designed to simplify the handling of form data
 - [Installation](#installation)
 - [Usage](#usage)
   - [parseWithSchema](#parsewithschema)
+  - [Submission](#submission)
   - [parse](#parse)
   - [serialize](#serialize)
-  - [Path Utilities](#path-utilities)
-    - [getPath](#getpath)
-    - [setPath](#setpath)
-    - [PathsFromObject](#pathsfromobject)
+  - [getPath](#getpath)
+  - [setPath](#setpath)
+  - [PathsFromObject](#pathsfromobject)
 - [Example: React Server Actions](#example-react-server-actions)
 - [License](#license)
 
@@ -114,8 +114,7 @@ const value = {
 The `parseWithSchema` function returns a `SchemaResult` object that extends the standard schema validation result with a `submission()` method. This method provides a consistent `Submission` object that makes it easy to handle both successful and failed validation results:
 
 ```ts
-const result = parseWithSchema(schema, formData);
-const submission = result.submission();
+const submission = parseWithSchema(schema, formData).submission();
 
 if (submission.status === "success") {
   // Access validated data
@@ -131,13 +130,49 @@ if (submission.status === "success") {
 }
 ```
 
-The `Submission` object provides a unified interface that includes:
+### Submission
 
-- **`status`**: Either `"success"`, `"error"`, or `"idle"`
-- **`value`**: The validated data (only present on success)
-- **`input`**: The raw parsed form data (always present)
-- **`fieldErrors`**: Field-specific validation errors
-- **`formErrors`**: Form-level validation errors
+The `Submission` type represents the result of form validation and provides a discriminated union interface for handling both successful and failed validation results. This is the type that the `submission()` method returns from `parseWithSchema`, making it easy to handle form validation outcomes in a type-safe way.
+
+```typescript
+import type { Submission } from "conformal";
+
+// The Submission type is a discriminated union with two variants:
+type SubmissionExample<Output> =
+  | {
+      /** The outcome of the last submission */
+      readonly status: "success";
+      /** The typed output value. Only present if `status === "success"` */
+      readonly value: Output;
+      /** The raw user input as submitted */
+      readonly input: PartialDeep<ParsedValue<Output>>;
+      /** Field-specific validation errors */
+      readonly fieldErrors: Partial<Record<PathsFromObject<Output>, string[]>>;
+      /** Form-level validation errors */
+      readonly formErrors: ReadonlyArray<string>;
+    }
+  | {
+      /** The outcome of the last submission */
+      readonly status: "idle" | "error";
+      /** The typed output value. Only present if `status === "success"` */
+      readonly value?: undefined;
+      /** The raw user input as submitted */
+      readonly input: PartialDeep<ParsedValue<Output>>;
+      /** Field-specific validation errors */
+      readonly fieldErrors: Partial<Record<PathsFromObject<Output>, string[]>>;
+      /** Form-level validation errors */
+      readonly formErrors: ReadonlyArray<string>;
+    };
+```
+
+**Key Benefits:**
+
+- **Discriminated Union**: Type-safe handling with `status` as the discriminator
+- **Generic Type Support**: `Submission<Output>` provides full type inference for your data
+- **Data Preservation**: Raw input is always available, even on validation failure
+- **Granular Error Handling**: Separate field and form-level errors for precise UI feedback
+- **Readonly Properties**: Immutable structure prevents accidental mutations
+- **Type Safety**: Full TypeScript support with automatic inference and compile-time guarantees
 
 ### parse
 
@@ -192,13 +227,9 @@ console.log(serialize(null)); // undefined
 console.log(serialize({ username: "test", age: 100 })); // { username: "test", age: "100" }
 ```
 
-### Path Utilities
+### getPath
 
-The path utilities, `getPath` and `setPath`, are foundational tools for handling object paths using dot and square bracket notation. They are particularly useful for developers looking to build custom client-side validation libraries. These functions enshrine the contract for dot and square bracket notation, making them essential for managing complex data structures.
-
-#### getPath
-
-Retrieve a value from an object using a path.
+Retrieve a value from an object using a path. This function is a foundational tool for handling object paths using dot and square bracket notation. It's particularly useful for developers building custom client-side validation libraries or complex data manipulation patterns.
 
 ```typescript
 import { getPath } from "conformal";
@@ -207,9 +238,9 @@ const value = getPath({ a: { b: { c: ["hey", "Hi!"] } } }, "a.b.c[1]");
 // Returns 'Hi!'
 ```
 
-#### setPath
+### setPath
 
-Set a value in an object using a path. The `setPath` function is used internally by the `parse` function.
+Set a value in an object using a path. The `setPath` function is used internally by the `parse` function and provides powerful object manipulation capabilities. **Note**: Creates copies only where needed to preserve immutability, avoiding unnecessary deep copying for better performance.
 
 ```typescript
 import { setPath } from "conformal";
@@ -218,7 +249,7 @@ const newObj = setPath({ a: { b: { c: [] } } }, "a.b.c[1]", "hey");
 // Returns { a: { b: { c: [<empty>, 'hey'] } } }
 ```
 
-#### PathsFromObject
+### PathsFromObject
 
 Extract all possible paths from an object type while automatically excluding paths that lead to browser-specific built-in types such as Blob, FileList, and Date. This type utility is useful for creating abstractions that enable type-safe access to specific fields within complex form data structures.
 

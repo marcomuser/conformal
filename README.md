@@ -19,13 +19,33 @@ Conformal is a TypeScript library designed to simplify the handling of form data
 
 ## Features
 
-- **Typed FormData Parsing**: Parse `FormData` into structured objects with typed values, eliminating the need to work with untyped form values.
+### 🚀 **End-to-End Form Data Management**
 
-- **Schema Validation**: Validate parsed data against a schema using `parseWithSchema`. This ensures that your form data adheres to expected structures and types, reducing runtime errors and ensuring data integrity.
+Conformal streamlines the way you handle `FormData` by providing a complete solution from parsing to validation to error handling. Never deal with untyped form data again!
 
-- **Serialization**: Transform values for use in HTML form elements, making it easy to set default values from backend data. This feature is ideal for pre-filling forms in editing scenarios.
+### 🔒 **Type Safety Without Compromise**
 
-- **Path Utilities**: Utilize `getPath` and `setPath` to manage deep values in objects using dot and bracket notation. These utilities are essential for developers building custom client-side validation libraries or complex data manipulation patterns.
+- **Zero Runtime Type Errors**: Parse `FormData` into fully typed objects with automatic TypeScript inference
+- **Schema-First Validation**: Integrate seamlessly with Zod, Yup, or any Standard Schema implementation
+- **Compile-Time Guarantees**: Catch form structure issues before they reach production
+
+### 🎯 **Flexible Form Data Parsing**
+
+- **Smart Notation Support**: Handle complex nested structures with dot notation (`user.profile.name`) and bracket notation (`items[0].type`)
+- **Automatic Type Coercion**: Convert form strings to numbers, booleans, and dates automatically
+- **Array Handling**: Seamlessly parse duplicate keys into arrays and handle sparse array indices
+
+### 🛡️ **Straightforward Error Handling**
+
+- **Never Lose User Input**: The submission pattern preserves all form data, even when validation fails
+- **Granular Error Control**: Separate field-specific errors from form-level errors for precise UI feedback
+- **Progressive Enhancement**: Build better error handling without breaking existing functionality
+
+### ⚡ **Performance & Developer Experience**
+
+- **Tree-Shakable**: Only import what you need
+- **Universal**: Works in browsers, Node.js, and edge runtimes
+- **Framework Agnostic**: Use with React, Vue, Svelte, or vanilla JavaScript
 
 ## Installation
 
@@ -66,8 +86,7 @@ The `parseWithSchema` function parses and validates [FormData](https://developer
       event.preventDefault();
 
       const formData = new FormData(form);
-      const result = parseWithSchema(schema, formData);
-      const submission = result.submission();
+      const submission = parseWithSchema(schema, formData).submission();
 
       if (submission.status === "success") {
         console.log(submission.value); // Successful result value

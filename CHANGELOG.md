@@ -1,5 +1,11 @@
 # conformal
 
+## 1.2.1
+
+### Patch Changes
+
+- [#11](https://github.com/marcomuser/conformal/pull/11) [`23953d3`](https://github.com/marcomuser/conformal/commit/23953d3d0d7c720be2cdeed10e5808de0768e0ab) Thanks [@marcomuser](https://github.com/marcomuser)! - Fix ParsedValue type to match parse behavior
+
 ## 1.2.0
 
 ### Minor Changes

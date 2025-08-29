@@ -7,10 +7,13 @@ Conformal is a TypeScript library designed to simplify the handling of form data
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
-  - [Parsing with Standard Schema](#parsing-with-standard-schema)
-  - [Parsing FormData](#parsing-formdata)
-  - [Serialization](#serialization)
+  - [parseWithSchema](#parsewithschema)
+  - [parse](#parse)
+  - [serialize](#serialize)
   - [Path Utilities](#path-utilities)
+    - [getPath](#getpath)
+    - [setPath](#setpath)
+    - [PathsFromObject](#pathsfromobject)
 - [Example: React Server Actions](#example-react-server-actions)
 - [License](#license)
 
@@ -34,7 +37,7 @@ npm install conformal
 
 ## Usage
 
-### Parsing with Standard Schema
+### parseWithSchema
 
 The `parseWithSchema` function parses and validates [FormData](https://developer.mozilla.org/docs/Web/API/FormData) against a [Standard Schema](https://standardschema.dev). It internally uses the `parse` function (see below) to first convert the `FormData` into a structured object before applying schema validation.
 
@@ -64,11 +67,15 @@ The `parseWithSchema` function parses and validates [FormData](https://developer
 
       const formData = new FormData(form);
       const result = parseWithSchema(schema, formData);
+      const submission = result.submission();
 
-      if (result.success) {
-        console.log(result.value); // Successful result value
+      if (submission.status === "success") {
+        console.log(submission.value); // Successful result value
+        console.log(submission.input); // Raw parsed form data
       } else {
-        console.log(result.issues); // Validation errors
+        console.log(submission.fieldErrors); // Field-specific validation errors
+        console.log(submission.formErrors); // Form-level validation errors
+        console.log(submission.input); // Raw parsed form data
       }
     });
   </script>
@@ -85,7 +92,35 @@ const value = {
 };
 ```
 
-### Parsing FormData
+The `parseWithSchema` function returns a `SchemaResult` object that extends the standard schema validation result with a `submission()` method. This method provides a consistent `Submission` object that makes it easy to handle both successful and failed validation results:
+
+```ts
+const result = parseWithSchema(schema, formData);
+const submission = result.submission();
+
+if (submission.status === "success") {
+  // Access validated data
+  const validatedData = submission.value;
+  // Access raw parsed form data
+  const rawInput = submission.input;
+} else {
+  // Handle validation errors
+  const fieldErrors = submission.fieldErrors; // Field-specific errors
+  const formErrors = submission.formErrors; // Form-level errors
+  // Access raw parsed form data even on failure
+  const rawInput = submission.input;
+}
+```
+
+The `Submission` object provides a unified interface that includes:
+
+- **`status`**: Either `"success"`, `"error"`, or `"idle"`
+- **`value`**: The validated data (only present on success)
+- **`input`**: The raw parsed form data (always present)
+- **`fieldErrors`**: Field-specific validation errors
+- **`formErrors`**: Form-level validation errors
+
+### parse
 
 The `parse` function allows you to convert a `FormData` object into a structured object with typed values. It supports both dot notation for nested objects and square bracket notation for arrays. You can mix dot and square bracket notation to create complex structures. The `parse` function allows you to create your own schema validator in cases where `parseWithSchema` does not support your usecase.
 
@@ -124,7 +159,7 @@ const result = {
 };
 ```
 
-### Serialization
+### serialize
 
 The `serialize` function transforms values for use in HTML form elements. It is particularly useful for setting default values in form fields, especially when integrating with a backend to pre-fill forms with existing data. By converting various data types into a format suitable for HTML attributes, `serialize` ensures that values are correctly displayed in form elements.
 
@@ -142,7 +177,7 @@ console.log(serialize({ username: "test", age: 100 })); // { username: "test", a
 
 The path utilities, `getPath` and `setPath`, are foundational tools for handling object paths using dot and square bracket notation. They are particularly useful for developers looking to build custom client-side validation libraries. These functions enshrine the contract for dot and square bracket notation, making them essential for managing complex data structures.
 
-#### Get Path
+#### getPath
 
 Retrieve a value from an object using a path.
 
@@ -153,7 +188,7 @@ const value = getPath({ a: { b: { c: ["hey", "Hi!"] } } }, "a.b.c[1]");
 // Returns 'Hi!'
 ```
 
-#### Set Path
+#### setPath
 
 Set a value in an object using a path. The `setPath` function is used internally by the `parse` function.
 
@@ -164,7 +199,7 @@ const newObj = setPath({ a: { b: { c: [] } } }, "a.b.c[1]", "hey");
 // Returns { a: { b: { c: [<empty>, 'hey'] } } }
 ```
 
-#### Extract Paths From Object Type
+#### PathsFromObject
 
 Extract all possible paths from an object type while automatically excluding paths that lead to browser-specific built-in types such as Blob, FileList, and Date. This type utility is useful for creating abstractions that enable type-safe access to specific fields within complex form data structures.
 
@@ -219,14 +254,14 @@ const schema = z.object({
 
 async function submitAction(formData) {
   "use server";
-  const result = parseWithSchema(schema, formData);
+  const submission = parseWithSchema(schema, formData).submission();
 
-  if (!result.success) {
-    return "Form not valid";
+  if (submission.status !== "success") {
+    return submission;
   }
 
-  const name = result.value.name; // string
-  const age = result.value.age; // number
+  const name = submission.value.name; // string
+  const age = submission.value.age; // number
   console.log({ name, age });
 }
 
@@ -240,6 +275,12 @@ export function Form() {
   );
 }
 ```
+
+**Key Benefits of the Submission Pattern:**
+
+- **Form Preservation**: The submission object contains raw user input (`submission.input`) to prevent data loss when validation fails
+- **Targeted Error Display**: Field-specific validation errors (`submission.fieldErrors`) allow you to show errors next to specific form fields
+- **Form-Level Feedback**: General validation errors (`submission.formErrors`) can be displayed as summary messages
 
 ## License
 

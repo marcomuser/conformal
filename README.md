@@ -27,9 +27,9 @@ Conformal is a TypeScript library designed to simplify the handling of form data
 
 ### 🎯 **Flexible Form Data Parsing**
 
-- **Smart Notation Support**: Handle complex nested structures with dot notation (`user.profile.name`) and bracket notation (`items[0].type`)
-- **Automatic Type Coercion**: Convert form strings to numbers, booleans, and dates automatically
-- **Array Handling**: Seamlessly parse duplicate keys into arrays and handle sparse array indices
+- **Dot Notation**: Handle nested objects with intuitive dot notation (`user.profile.name`)
+- **Bracket Notation**: Support arrays with bracket notation (`items[0].type`)
+- **Schema-Based Coercion**: Type coercion is handled easily through your validation schema
 
 ### 🛡️ **Straightforward Error Handling**
 

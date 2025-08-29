@@ -1,28 +1,47 @@
 # Conformal
 
-Conformal is a TypeScript library designed to simplify the handling of form data and object manipulation in web applications. It provides utilities for parsing `FormData` into structured objects, validating them against schemas, and serializing values for use in HTML forms. This library is ideal for developers who need a robust solution for managing form data in a type-safe manner.
+Conformal is a TypeScript library designed to simplify the handling of form data and object manipulation in web applications. It provides utilities for parsing `FormData` into structured objects, validating them against schemas, and serializing values for use in HTML forms. The library also exports useful types like `Submission` and `PathsFromObject` for advanced use cases. This library is ideal for developers who need a robust solution for managing form data submissions in a type-safe manner.
 
 ### Table of Contents
 
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
-  - [Parsing with Standard Schema](#parsing-with-standard-schema)
-  - [Parsing FormData](#parsing-formdata)
-  - [Serialization](#serialization)
-  - [Path Utilities](#path-utilities)
+  - [parseWithSchema](#parsewithschema)
+  - [Submission](#submission)
+  - [parse](#parse)
+  - [serialize](#serialize)
+  - [getPath](#getpath)
+  - [setPath](#setpath)
+  - [PathsFromObject](#pathsfromobject)
 - [Example: React Server Actions](#example-react-server-actions)
 - [License](#license)
 
 ## Features
 
-- **Typed FormData Parsing**: Parse `FormData` into structured objects with typed values, eliminating the need to work with untyped form values.
+### 🔒 **Type Safety Without Compromise**
 
-- **Schema Validation**: Validate parsed data against a schema using `parseWithSchema`. This ensures that your form data adheres to expected structures and types, reducing runtime errors and ensuring data integrity.
+- **Zero Runtime Type Errors**: Parse `FormData` into fully typed objects with automatic TypeScript inference
+- **Schema-First Validation**: Integrate seamlessly with Zod, Valibot, or any Standard Schema implementation
+- **Compile-Time Guarantees**: Catch form structure issues before they reach production
 
-- **Serialization**: Transform values for use in HTML form elements, making it easy to set default values from backend data. This feature is ideal for pre-filling forms in editing scenarios.
+### 🎯 **Flexible Form Data Parsing**
 
-- **Path Utilities**: Utilize `getPath` and `setPath` to manage deep values in objects using dot and bracket notation. These utilities are essential for developers building custom client-side validation libraries or complex data manipulation patterns.
+- **Dot Notation**: Handle nested objects with intuitive dot notation (`user.profile.name`)
+- **Bracket Notation**: Support arrays with bracket notation (`items[0].type`)
+- **Schema-Based Coercion**: Type coercion is handled easily through your validation schema
+
+### 🛡️ **Straightforward Error Handling**
+
+- **Never Lose User Input**: The submission pattern preserves all form data, even when validation fails
+- **Granular Error Control**: Separate field-specific errors from form-level errors for precise UI feedback
+- **Progressive Enhancement**: Build better error handling without breaking existing functionality
+
+### ⚡ **Works everywhere JS runs**
+
+- **Tree-Shakable**: Only import what you need
+- **Universal**: Works in browsers, Node.js, and edge runtimes
+- **Framework Agnostic**: Use with React, Vue, Svelte, or vanilla JavaScript
 
 ## Installation
 
@@ -34,9 +53,11 @@ npm install conformal
 
 ## Usage
 
-### Parsing with Standard Schema
+### parseWithSchema
 
-The `parseWithSchema` function parses and validates [FormData](https://developer.mozilla.org/docs/Web/API/FormData) against a [Standard Schema](https://standardschema.dev). It internally uses the `parse` function (see below) to first convert the `FormData` into a structured object before applying schema validation.
+The `parseWithSchema` function parses and validates [FormData](https://developer.mozilla.org/docs/Web/API/FormData) against a [Standard Schema](https://standardschema.dev). It internally uses the [parse](#parse) function to first convert the `FormData` into a structured object before applying schema validation.
+
+**🚀 Try it yourself**: This example includes an import map and can be run directly in a browser!
 
 ```html
 <body>
@@ -47,6 +68,15 @@ The `parseWithSchema` function parses and validates [FormData](https://developer
     <input type="text" name="hobbies" placeholder="Hobby 2" />
     <button type="submit">Submit</button>
   </form>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "conformal": "https://cdn.jsdelivr.net/npm/conformal/+esm",
+        "zod": "https://cdn.jsdelivr.net/npm/zod/+esm"
+      }
+    }
+  </script>
 
   <script type="module">
     import { parseWithSchema } from "conformal";
@@ -63,12 +93,15 @@ The `parseWithSchema` function parses and validates [FormData](https://developer
       event.preventDefault();
 
       const formData = new FormData(form);
-      const result = parseWithSchema(schema, formData);
+      const submission = parseWithSchema(schema, formData).submission();
 
-      if (result.success) {
-        console.log(result.value); // Successful result value
+      if (submission.status === "success") {
+        console.log(submission.value); // Successful result value
+        console.log(submission.input); // Raw parsed form data
       } else {
-        console.log(result.issues); // Validation errors
+        console.log(submission.fieldErrors); // Field-specific validation errors
+        console.log(submission.formErrors); // Form-level validation errors
+        console.log(submission.input); // Raw parsed form data
       }
     });
   </script>
@@ -77,7 +110,7 @@ The `parseWithSchema` function parses and validates [FormData](https://developer
 
 This will result in the following data structure:
 
-```ts
+```typescript
 const value = {
   name: "John Doe",
   age: 30,
@@ -85,9 +118,72 @@ const value = {
 };
 ```
 
-### Parsing FormData
+The `parseWithSchema` function returns a `SchemaResult` object that extends the standard schema validation result with a `submission()` method. This method provides a consistent `Submission` object that makes it easy to handle both successful and failed validation results:
 
-The `parse` function allows you to convert a `FormData` object into a structured object with typed values. It supports both dot notation for nested objects and square bracket notation for arrays. You can mix dot and square bracket notation to create complex structures. The `parse` function allows you to create your own schema validator in cases where `parseWithSchema` does not support your usecase.
+```typescript
+const submission = parseWithSchema(schema, formData).submission();
+
+if (submission.status === "success") {
+  // Access validated data
+  const validatedData = submission.value;
+  // Access raw parsed form data
+  const rawInput = submission.input;
+} else {
+  // Handle validation errors
+  const fieldErrors = submission.fieldErrors; // Field-specific errors
+  const formErrors = submission.formErrors; // Form-level errors
+  // Access raw parsed form data even on failure
+  const rawInput = submission.input;
+}
+```
+
+### Submission
+
+The `Submission` type represents the result of form validation and provides a discriminated union interface for handling both successful and failed validation results. This is the type that the `submission()` method returns from `parseWithSchema`, making it easy to handle form validation outcomes in a type-safe way.
+
+```typescript
+import type { Submission } from "conformal";
+
+// The Submission type is a discriminated union with two variants:
+type SubmissionExample<Output> =
+  | {
+      /** The outcome of the last submission */
+      readonly status: "success";
+      /** The typed output value. Only present if `status === "success"` */
+      readonly value: Output;
+      /** The raw user input as submitted */
+      readonly input: PartialDeep<ParsedValue<Output>>;
+      /** Field-specific validation errors */
+      readonly fieldErrors: Partial<Record<PathsFromObject<Output>, string[]>>;
+      /** Form-level validation errors */
+      readonly formErrors: ReadonlyArray<string>;
+    }
+  | {
+      /** The outcome of the last submission */
+      readonly status: "idle" | "error";
+      /** The typed output value. Only present if `status === "success"` */
+      readonly value?: undefined;
+      /** The raw user input as submitted */
+      readonly input: PartialDeep<ParsedValue<Output>>;
+      /** Field-specific validation errors */
+      readonly fieldErrors: Partial<Record<PathsFromObject<Output>, string[]>>;
+      /** Form-level validation errors */
+      readonly formErrors: ReadonlyArray<string>;
+    };
+```
+
+**Key Benefits:**
+
+- **Discriminated Union**: Type-safe handling with `status` as the discriminator
+- **Generic Type Support**: `Submission<Output>` provides full type inference for your data
+- **Data Preservation**: Raw input is always available, even on validation failure
+- **Granular Error Handling**: Separate field and form-level errors for precise UI feedback
+- **Readonly Properties**: Immutable structure prevents accidental mutations
+- **Type Safety**: Full TypeScript support with automatic inference and compile-time guarantees
+
+### parse
+
+The `parse` function allows you to convert a `FormData` object into a structured object with typed values. It supports both dot notation for nested objects and square bracket notation for arrays. You can mix dot and square bracket notation to create complex structures. The `parse` function allows you to create your own schema validator in cases where `parseWithSchema` does not support your use case.
 
 ```typescript
 import { parse } from "conformal";
@@ -111,7 +207,7 @@ const result = parse<{
 
 This will result in the following data structure:
 
-```ts
+```typescript
 const result = {
   user: {
     name: "John Doe",
@@ -124,7 +220,7 @@ const result = {
 };
 ```
 
-### Serialization
+### serialize
 
 The `serialize` function transforms values for use in HTML form elements. It is particularly useful for setting default values in form fields, especially when integrating with a backend to pre-fill forms with existing data. By converting various data types into a format suitable for HTML attributes, `serialize` ensures that values are correctly displayed in form elements.
 
@@ -138,13 +234,9 @@ console.log(serialize(null)); // undefined
 console.log(serialize({ username: "test", age: 100 })); // { username: "test", age: "100" }
 ```
 
-### Path Utilities
+### getPath
 
-The path utilities, `getPath` and `setPath`, are foundational tools for handling object paths using dot and square bracket notation. They are particularly useful for developers looking to build custom client-side validation libraries. These functions enshrine the contract for dot and square bracket notation, making them essential for managing complex data structures.
-
-#### Get Path
-
-Retrieve a value from an object using a path.
+Retrieve a value from an object using a path. This function is a foundational tool for handling object paths using dot and square bracket notation. It's particularly useful for developers building custom client-side validation libraries or complex data manipulation patterns.
 
 ```typescript
 import { getPath } from "conformal";
@@ -153,9 +245,9 @@ const value = getPath({ a: { b: { c: ["hey", "Hi!"] } } }, "a.b.c[1]");
 // Returns 'Hi!'
 ```
 
-#### Set Path
+### setPath
 
-Set a value in an object using a path. The `setPath` function is used internally by the `parse` function.
+Set a value in an object using a path. The `setPath` function is used internally by the `parse` function and provides powerful object manipulation capabilities. **Note**: Creates copies only where needed to preserve immutability, avoiding unnecessary deep copying for better performance.
 
 ```typescript
 import { setPath } from "conformal";
@@ -164,7 +256,7 @@ const newObj = setPath({ a: { b: { c: [] } } }, "a.b.c[1]", "hey");
 // Returns { a: { b: { c: [<empty>, 'hey'] } } }
 ```
 
-#### Extract Paths From Object Type
+### PathsFromObject
 
 Extract all possible paths from an object type while automatically excluding paths that lead to browser-specific built-in types such as Blob, FileList, and Date. This type utility is useful for creating abstractions that enable type-safe access to specific fields within complex form data structures.
 
@@ -219,14 +311,14 @@ const schema = z.object({
 
 async function submitAction(formData) {
   "use server";
-  const result = parseWithSchema(schema, formData);
+  const submission = parseWithSchema(schema, formData).submission();
 
-  if (!result.success) {
-    return "Form not valid";
+  if (submission.status !== "success") {
+    return submission;
   }
 
-  const name = result.value.name; // string
-  const age = result.value.age; // number
+  const name = submission.value.name; // string
+  const age = submission.value.age; // number
   console.log({ name, age });
 }
 
@@ -240,6 +332,12 @@ export function Form() {
   );
 }
 ```
+
+**Key Benefits of the Submission Pattern:**
+
+- **Form Preservation**: The submission object contains raw user input (`submission.input`) to prevent data loss when validation fails
+- **Targeted Error Display**: Field-specific validation errors (`submission.fieldErrors`) allow you to show errors next to specific form fields
+- **Form-Level Feedback**: General validation errors (`submission.formErrors`) can be displayed as summary messages
 
 ## License
 

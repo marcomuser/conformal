@@ -20,7 +20,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "changeset": "npx changeset",
+    "changeset": "changeset",
     "format:check": "prettier . --check",
     "format:write": "prettier . --write",
     "test": "vitest run",

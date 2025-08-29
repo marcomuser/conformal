@@ -1,6 +1,7 @@
 import type { StandardSchemaV1 } from "@standard-schema/spec";
 import type { UnknownRecord } from "type-fest";
 import { setPath } from "./path.js";
+import { toSubmission } from "./submission.js";
 import type { AnyRecord, ParsedValue, SchemaResult } from "./types.js";
 
 /**
@@ -41,16 +42,18 @@ export function parse<FormValues extends AnyRecord = UnknownRecord>(
  *
  * @param schema A schema object that implements the Standard Schema specification.
  * @param formData A `FormData` object to parse and validate.
- * @returns A result object indicating success or failure, with the validated data on success or validation issues on failure.
+ * @returns A `SchemaResult` object that extends the standard schema validation result with a `submission()` method.
+ *          The `submission()` method returns a `Submission` object that provides a consistent interface for handling
+ *          both successful and failed validation results.
  *
  * @example
  * ```ts
- * import { z } from 'zod';
+ * import * as z from 'zod';
  *
  * const schema = z.object({
  *   name: z.string(),
  *   age: z.coerce.number(),
- *   hobbies: z.array(z.string())
+ *   hobbies: z.string().array(),
  * });
  *
  * const formData = new FormData();
@@ -60,17 +63,22 @@ export function parse<FormValues extends AnyRecord = UnknownRecord>(
  * formData.append('hobbies', 'Coding');
  *
  * const result = parseWithSchema(schema, formData);
- * if (result.success) {
- *   console.log(result.value); // { name: 'John Doe', age: 30, hobbies: ['Music', 'Coding'] }
+ * const submission = result.submission();
+ *
+ * if (submission.status === 'success') {
+ *   console.log(submission.value); // { name: 'John Doe', age: 30, hobbies: ['Music', 'Coding'] }
+ *   console.log(submission.input); // Raw parsed form data
  * } else {
- *   console.log(result.issues); // Validation errors
+ *   console.log(submission.fieldErrors); // Field-specific validation errors
+ *   console.log(submission.formErrors); // Form-level validation errors
+ *   console.log(submission.input); // Raw parsed form data
  * }
  * ```
  */
 export function parseWithSchema<T extends StandardSchemaV1>(
   schema: T,
   formData: FormData,
-): SchemaResult<StandardSchemaV1.InferOutput<T>> {
+): SchemaResult<T> {
   const input = parse(formData);
   const result = schema["~standard"].validate(input);
 
@@ -78,13 +86,10 @@ export function parseWithSchema<T extends StandardSchemaV1>(
     throw new TypeError("Schema validation must be synchronous");
   }
 
-  return result.issues
-    ? {
-        success: false,
-        issues: result.issues,
-      }
-    : {
-        success: true,
-        value: result.value,
-      };
+  return {
+    ...result,
+    submission() {
+      return toSubmission<StandardSchemaV1.InferOutput<T>>(input, result);
+    },
+  };
 }

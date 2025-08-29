@@ -179,15 +179,14 @@ describe("parseWithSchema", () => {
     formData.append("hobbies", "Coding");
 
     const result = parseWithSchema(schema, formData);
+    const submission = result.submission();
 
-    expect(result.success).toBe(true);
-    if (result.success) {
-      expect(result.value).toEqual({
-        name: "John Doe",
-        age: 30,
-        hobbies: ["Music", "Coding"],
-      });
-    }
+    expect(submission.status).toBe("success");
+    expect(submission.value).toEqual({
+      name: "John Doe",
+      age: 30,
+      hobbies: ["Music", "Coding"],
+    });
   });
 
   it("should return failure result when validation fails", () => {
@@ -203,13 +202,12 @@ describe("parseWithSchema", () => {
     formData.append("email", "invalid-email");
 
     const result = parseWithSchema(schema, formData);
+    const submission = result.submission();
 
-    expect(result.success).toBe(false);
-    if (!result.success) {
-      expect(result.issues).toBeDefined();
-      expect(result.issues.length).toBeGreaterThan(0);
-      expect(result.value).toBeUndefined();
-    }
+    expect(submission.status).toBe("error");
+    expect(submission.value).toBeUndefined();
+    expect(submission.fieldErrors).toBeDefined();
+    expect(Object.keys(submission.fieldErrors).length).toBeGreaterThan(0);
   });
 
   it("should handle nested object validation", () => {
@@ -227,18 +225,17 @@ describe("parseWithSchema", () => {
     formData.append("user.profile.age", "25");
 
     const result = parseWithSchema(schema, formData);
+    const submission = result.submission();
 
-    expect(result.success).toBe(true);
-    if (result.success) {
-      expect(result.value).toEqual({
-        user: {
-          profile: {
-            name: "Jane",
-            age: 25,
-          },
+    expect(submission.status).toBe("success");
+    expect(submission.value).toEqual({
+      user: {
+        profile: {
+          name: "Jane",
+          age: 25,
         },
-      });
-    }
+      },
+    });
   });
 
   it("should throw TypeError when schema validation returns a Promise", () => {
@@ -271,13 +268,12 @@ describe("parseWithSchema", () => {
     formData.append("items", "cherry");
 
     const result = parseWithSchema(schema, formData);
+    const submission = result.submission();
 
-    expect(result.success).toBe(true);
-    if (result.success) {
-      expect(result.value).toEqual({
-        items: ["apple", "banana", "cherry"],
-      });
-    }
+    expect(submission.status).toBe("success");
+    expect(submission.value).toEqual({
+      items: ["apple", "banana", "cherry"],
+    });
   });
 
   it("should return failure for array validation with invalid items", () => {
@@ -290,11 +286,63 @@ describe("parseWithSchema", () => {
     formData.append("items", "valid");
 
     const result = parseWithSchema(schema, formData);
+    const submission = result.submission();
 
-    expect(result.success).toBe(false);
-    if (!result.success) {
-      expect(result.issues).toBeDefined();
-      expect(result.issues.length).toBeGreaterThan(0);
-    }
+    expect(submission.status).toBe("error");
+    expect(submission.value).toBeUndefined();
+    expect(submission.fieldErrors).toBeDefined();
+    expect(Object.keys(submission.fieldErrors).length).toBeGreaterThan(0);
+  });
+
+  it("should provide submission method that returns success submission", () => {
+    const schema = z.object({
+      name: z.string(),
+      age: z.coerce.number(),
+    });
+
+    const formData = new FormData();
+    formData.append("name", "John Doe");
+    formData.append("age", "30");
+
+    const result = parseWithSchema(schema, formData);
+    const submission = result.submission();
+
+    expect(submission.status).toBe("success");
+    expect(submission.value).toEqual({
+      name: "John Doe",
+      age: 30,
+    });
+    expect(submission.input).toEqual({
+      name: "John Doe",
+      age: "30",
+    });
+    expect(submission.formErrors).toEqual([]);
+    expect(submission.fieldErrors).toEqual({});
+  });
+
+  it("should provide submission method that returns error submission", () => {
+    const schema = z.object({
+      name: z.string().min(3),
+      age: z.coerce.number().min(18),
+    });
+
+    const formData = new FormData();
+    formData.append("name", "Jo"); // Too short
+    formData.append("age", "16"); // Too young
+
+    const result = parseWithSchema(schema, formData);
+    const submission = result.submission();
+
+    expect(submission.status).toBe("error");
+    expect(submission.value).toBeUndefined();
+    expect(submission.input).toEqual({
+      name: "Jo",
+      age: "16",
+    });
+    expect(submission.formErrors).toEqual([]);
+    expect(submission.fieldErrors).toEqual({
+      name: expect.arrayContaining([expect.stringContaining("3")]),
+      age: expect.arrayContaining([expect.stringContaining("18")]),
+    });
   });
 });

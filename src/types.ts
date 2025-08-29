@@ -1,19 +1,15 @@
 import type { StandardSchemaV1 } from "@standard-schema/spec";
 import type { Get, PartialDeep, Paths, UnknownRecord } from "type-fest";
 
-export type ParsedValue<Value> = Value extends Date | number | bigint
+export type ParsedValue<Value> = Value extends Date | number | bigint | boolean
   ? string
-  : Value extends boolean
-    ? string | undefined
-    : Value extends Blob
-      ? File
-      : Value extends null
-        ? undefined
-        : Value extends Array<infer Item>
-          ? Array<ParsedValue<Item>>
-          : Value extends AnyRecord
-            ? { [Key in keyof Value]: ParsedValue<Value[Key]> }
-            : Value;
+  : Value extends Blob
+    ? File
+    : Value extends Array<infer Item>
+      ? Array<ParsedValue<Item>>
+      : Value extends AnyRecord
+        ? { [Key in keyof Value]: ParsedValue<Value[Key]> }
+        : Value;
 
 export type SerializedValue<Value> = Value extends Blob | FileList
   ? Value

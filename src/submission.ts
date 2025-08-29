@@ -49,25 +49,28 @@ function getFormErrors(issues?: ReadonlyArray<StandardSchemaV1.Issue>) {
 
 function getFieldPath(issue: StandardSchemaV1.Issue): string | null {
   if (issue.path?.length) {
-    let dotPath = "";
+    let fieldPath = "";
     for (const item of issue.path) {
       const key = typeof item === "object" ? item.key : item;
       if (typeof key === "string" || typeof key === "number") {
-        if (dotPath) {
-          // For array indices, use bracket notation; for object properties, use dot notation
-          if (typeof key === "number") {
-            dotPath += `[${key}]`;
+        if (fieldPath) {
+          // Check if it's a valid array index (number or numeric string)
+          if (
+            typeof key === "number" ||
+            (typeof key === "string" && /^\d+$/.test(key))
+          ) {
+            fieldPath += `[${key}]`;
           } else {
-            dotPath += `.${key}`;
+            fieldPath += `.${key}`;
           }
         } else {
-          dotPath += key;
+          fieldPath += key;
         }
       } else {
         return null;
       }
     }
-    return dotPath;
+    return fieldPath;
   }
   return null;
 }

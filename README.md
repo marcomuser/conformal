@@ -19,10 +19,6 @@ Conformal is a TypeScript library designed to simplify the handling of form data
 
 ## Features
 
-### 🚀 **End-to-End Form Data Management**
-
-Conformal streamlines the way you handle `FormData` by providing a complete solution from parsing to validation to error handling. Never deal with untyped form data again!
-
 ### 🔒 **Type Safety Without Compromise**
 
 - **Zero Runtime Type Errors**: Parse `FormData` into fully typed objects with automatic TypeScript inference
@@ -41,7 +37,7 @@ Conformal streamlines the way you handle `FormData` by providing a complete solu
 - **Granular Error Control**: Separate field-specific errors from form-level errors for precise UI feedback
 - **Progressive Enhancement**: Build better error handling without breaking existing functionality
 
-### ⚡ **Performance & Developer Experience**
+### ⚡ **Works everywhere JS runs**
 
 - **Tree-Shakable**: Only import what you need
 - **Universal**: Works in browsers, Node.js, and edge runtimes

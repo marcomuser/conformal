@@ -25,7 +25,7 @@ export function toSubmission<Output>(
       };
 }
 
-function getFormErrors(issues?: ReadonlyArray<StandardSchemaV1.Issue>) {
+export function getFormErrors(issues?: ReadonlyArray<StandardSchemaV1.Issue>) {
   const formErrors: string[] = [];
   const fieldErrors: Record<string, string[]> = {};
 
@@ -47,7 +47,7 @@ function getFormErrors(issues?: ReadonlyArray<StandardSchemaV1.Issue>) {
   return { formErrors, fieldErrors };
 }
 
-function getFieldPath(issue: StandardSchemaV1.Issue): string | null {
+export function getFieldPath(issue: StandardSchemaV1.Issue): string | null {
   if (issue.path?.length) {
     let fieldPath = "";
     for (const item of issue.path) {

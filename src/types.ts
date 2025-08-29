@@ -47,14 +47,14 @@ export type GetFromObject<
 
 export type AnyRecord = Record<PropertyKey, any>;
 
-export type Submission<Input = UnknownRecord, Output = UnknownRecord> =
+export type Submission<Output = UnknownRecord> =
   | {
       /** The outcome of the last submission. */
       readonly status: "success";
       /** The typed output value. Only present if `status === "success"`. */
       readonly value: Output;
       /** The raw user input as submitted. */
-      readonly input: PartialDeep<Input>;
+      readonly input: PartialDeep<ParsedValue<Output>>;
       /** Field-specific validation errors. */
       readonly fieldErrors: Partial<Record<PathsFromObject<Output>, string[]>>;
       /** Form-level validation errors. */
@@ -66,7 +66,7 @@ export type Submission<Input = UnknownRecord, Output = UnknownRecord> =
       /** The typed output value. Only present if `status === "success"`. */
       readonly value?: undefined;
       /** The raw user input as submitted. */
-      readonly input: PartialDeep<Input>;
+      readonly input: PartialDeep<ParsedValue<Output>>;
       /** Field-specific validation errors. */
       readonly fieldErrors: Partial<Record<PathsFromObject<Output>, string[]>>;
       /** Form-level validation errors. */
@@ -76,8 +76,5 @@ export type Submission<Input = UnknownRecord, Output = UnknownRecord> =
 export type SchemaResult<T extends StandardSchemaV1> = StandardSchemaV1.Result<
   StandardSchemaV1.InferOutput<T>
 > & {
-  submission: () => Submission<
-    ParsedValue<StandardSchemaV1.InferOutput<T>>,
-    StandardSchemaV1.InferOutput<T>
-  >;
+  submission: () => Submission<StandardSchemaV1.InferOutput<T>>;
 };

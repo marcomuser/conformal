@@ -5,13 +5,9 @@ describe("ParsedValue", () => {
   it("should handle primitive types", () => {
     expectTypeOf<ParsedValue<string>>().toEqualTypeOf<string>();
     expectTypeOf<ParsedValue<number>>().toEqualTypeOf<string>();
-    expectTypeOf<ParsedValue<boolean>>().toEqualTypeOf<string | undefined>();
+    expectTypeOf<ParsedValue<boolean>>().toEqualTypeOf<string>();
     expectTypeOf<ParsedValue<Date>>().toEqualTypeOf<string>();
     expectTypeOf<ParsedValue<bigint>>().toEqualTypeOf<string>();
-  });
-
-  it("should handle null", () => {
-    expectTypeOf<ParsedValue<null>>().toEqualTypeOf<undefined>();
   });
 
   it("should handle Blob and File", () => {
@@ -93,9 +89,9 @@ describe("ParsedValue", () => {
         };
         meta:
           | {
-              active: string | undefined;
+              active: string;
             }[]
-          | undefined;
+          | null;
       };
     };
 
@@ -129,9 +125,9 @@ describe("ParsedValue", () => {
         };
         meta:
           | {
-              active: string | undefined;
+              active: string;
             }[]
-          | undefined;
+          | null;
       };
     };
 

@@ -67,6 +67,15 @@ The `parseWithSchema` function parses and validates [FormData](https://developer
     <button type="submit">Submit</button>
   </form>
 
+  <script type="importmap">
+    {
+      "imports": {
+        "conformal": "https://cdn.jsdelivr.net/npm/conformal/+esm",
+        "zod": "https://cdn.jsdelivr.net/npm/zod/+esm"
+      }
+    }
+  </script>
+
   <script type="module">
     import { parseWithSchema } from "conformal";
     import * as z from "zod";

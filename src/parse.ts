@@ -42,7 +42,9 @@ export function parse<FormValues extends AnyRecord = UnknownRecord>(
  *
  * @param schema A schema object that implements the Standard Schema specification.
  * @param formData A `FormData` object to parse and validate.
- * @returns A result object indicating success or failure, with the validated data on success or validation issues on failure.
+ * @returns A `SchemaResult` object that extends the standard schema validation result with a `submission()` method.
+ *          The `submission()` method returns a `Submission` object that provides a consistent interface for handling
+ *          both successful and failed validation results.
  *
  * @example
  * ```ts
@@ -61,10 +63,15 @@ export function parse<FormValues extends AnyRecord = UnknownRecord>(
  * formData.append('hobbies', 'Coding');
  *
  * const result = parseWithSchema(schema, formData);
- * if (result.success) {
- *   console.log(result.value); // { name: 'John Doe', age: 30, hobbies: ['Music', 'Coding'] }
+ * const submission = result.submission();
+ *
+ * if (submission.status === 'success') {
+ *   console.log(submission.value); // { name: 'John Doe', age: 30, hobbies: ['Music', 'Coding'] }
+ *   console.log(submission.input); // Raw parsed form data
  * } else {
- *   console.log(result.issues); // Validation errors
+ *   console.log(submission.fieldErrors); // Field-specific validation errors
+ *   console.log(submission.formErrors); // Form-level validation errors
+ *   console.log(submission.input); // Raw parsed form data
  * }
  * ```
  */

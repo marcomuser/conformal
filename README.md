@@ -26,7 +26,7 @@ Conformal streamlines the way you handle `FormData` by providing a complete solu
 ### 🔒 **Type Safety Without Compromise**
 
 - **Zero Runtime Type Errors**: Parse `FormData` into fully typed objects with automatic TypeScript inference
-- **Schema-First Validation**: Integrate seamlessly with Zod, Yup, or any Standard Schema implementation
+- **Schema-First Validation**: Integrate seamlessly with Zod, Valibot, or any Standard Schema implementation
 - **Compile-Time Guarantees**: Catch form structure issues before they reach production
 
 ### 🎯 **Flexible Form Data Parsing**
@@ -59,7 +59,7 @@ npm install conformal
 
 ### parseWithSchema
 
-The `parseWithSchema` function parses and validates [FormData](https://developer.mozilla.org/docs/Web/API/FormData) against a [Standard Schema](https://standardschema.dev). It internally uses the `parse` function (see below) to first convert the `FormData` into a structured object before applying schema validation.
+The `parseWithSchema` function parses and validates [FormData](https://developer.mozilla.org/docs/Web/API/FormData) against a [Standard Schema](https://standardschema.dev). It internally uses the [parse](#parse) function to first convert the `FormData` into a structured object before applying schema validation.
 
 ```html
 <body>

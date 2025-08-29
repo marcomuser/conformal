@@ -139,47 +139,22 @@ if (submission.status === "success") {
 
 ### Submission
 
-The `Submission` type represents the result of form validation and provides a discriminated union interface for handling both successful and failed validation results. This is the type that the `submission()` method returns from `parseWithSchema`, making it easy to handle form validation outcomes in a type-safe way.
+The `Submission` type represents the result of form validation and provides a clean interface for handling both successful and failed validation results. This is the type that the `submission()` method returns from `parseWithSchema`.
 
-```typescript
-import type { Submission } from "conformal";
+**Properties:**
 
-// The Submission type is a discriminated union with two variants:
-type SubmissionExample<Output> =
-  | {
-      /** The outcome of the last submission */
-      readonly status: "success";
-      /** The typed output value. Only present if `status === "success"` */
-      readonly value: Output;
-      /** The raw user input as submitted */
-      readonly input: PartialDeep<ParsedValue<Output>>;
-      /** Field-specific validation errors */
-      readonly fieldErrors: Partial<Record<PathsFromObject<Output>, string[]>>;
-      /** Form-level validation errors */
-      readonly formErrors: ReadonlyArray<string>;
-    }
-  | {
-      /** The outcome of the last submission */
-      readonly status: "idle" | "error";
-      /** The typed output value. Only present if `status === "success"` */
-      readonly value?: undefined;
-      /** The raw user input as submitted */
-      readonly input: PartialDeep<ParsedValue<Output>>;
-      /** Field-specific validation errors */
-      readonly fieldErrors: Partial<Record<PathsFromObject<Output>, string[]>>;
-      /** Form-level validation errors */
-      readonly formErrors: ReadonlyArray<string>;
-    };
-```
+- **`status`**: A string that tells you the outcome - either `"success"` when validation passes, `"error"` when it fails, or `"idle"` for initial states
+- **`value`**: Contains your validated and typed data when `status` is `"success"`. This is `undefined` when there are validation errors
+- **`input`**: Always contains the raw user input that was submitted, regardless of validation success or failure. This is useful for preserving user input even when validation fails
+- **`fieldErrors`**: An object that maps field names to arrays of error messages. For example, `{ "email": ["Invalid email format"], "age": ["Must be a number"] }`. This is empty when validation succeeds
+- **`formErrors`**: An array of form-level validation errors that aren't tied to specific fields. For example, `["Passwords don't match", "Terms must be accepted"]`. This is empty when validation succeeds
 
 **Key Benefits:**
 
-- **Discriminated Union**: Type-safe handling with `status` as the discriminator
-- **Generic Type Support**: `Submission<Output>` provides full type inference for your data
+- **Type Safety**: Full TypeScript support with automatic type inference for your data
 - **Data Preservation**: Raw input is always available, even on validation failure
 - **Granular Error Handling**: Separate field and form-level errors for precise UI feedback
-- **Readonly Properties**: Immutable structure prevents accidental mutations
-- **Type Safety**: Full TypeScript support with automatic inference and compile-time guarantees
+- **Immutable**: All properties are read-only, preventing accidental mutations
 
 ### parse
 

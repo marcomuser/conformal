@@ -1,6 +1,6 @@
 # Conformal
 
-Conformal is a TypeScript library designed to simplify the handling of form data and object manipulation in web applications. It provides utilities for parsing `FormData` into structured objects, validating them against schemas, and serializing values for use in HTML forms. This library is ideal for developers who need a robust solution for managing form data in a type-safe manner.
+Conformal is a TypeScript library designed to simplify the handling of form data and object manipulation in web applications. It provides utilities for parsing `FormData` into structured objects, validating them against schemas, and serializing values for use in HTML forms. The library also exports useful types like `Submission` and `PathsFromObject` for advanced use cases. This library is ideal for developers who need a robust solution for managing form data in a type-safe manner.
 
 ### Table of Contents
 
@@ -103,7 +103,7 @@ The `parseWithSchema` function parses and validates [FormData](https://developer
 
 This will result in the following data structure:
 
-```ts
+```typescript
 const value = {
   name: "John Doe",
   age: 30,
@@ -113,7 +113,7 @@ const value = {
 
 The `parseWithSchema` function returns a `SchemaResult` object that extends the standard schema validation result with a `submission()` method. This method provides a consistent `Submission` object that makes it easy to handle both successful and failed validation results:
 
-```ts
+```typescript
 const submission = parseWithSchema(schema, formData).submission();
 
 if (submission.status === "success") {
@@ -176,7 +176,7 @@ type SubmissionExample<Output> =
 
 ### parse
 
-The `parse` function allows you to convert a `FormData` object into a structured object with typed values. It supports both dot notation for nested objects and square bracket notation for arrays. You can mix dot and square bracket notation to create complex structures. The `parse` function allows you to create your own schema validator in cases where `parseWithSchema` does not support your usecase.
+The `parse` function allows you to convert a `FormData` object into a structured object with typed values. It supports both dot notation for nested objects and square bracket notation for arrays. You can mix dot and square bracket notation to create complex structures. The `parse` function allows you to create your own schema validator in cases where `parseWithSchema` does not support your use case.
 
 ```typescript
 import { parse } from "conformal";
@@ -200,7 +200,7 @@ const result = parse<{
 
 This will result in the following data structure:
 
-```ts
+```typescript
 const result = {
   user: {
     name: "John Doe",

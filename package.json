@@ -1,9 +1,10 @@
 {
   "name": "conformal",
   "version": "1.2.1",
-  "description": "Conform FormData into structured, strongly-typed objects.",
+  "description": "Type-safe form submissions for the modern web.",
   "keywords": [
     "formdata",
+    "submission",
     "schema",
     "typescript"
   ],

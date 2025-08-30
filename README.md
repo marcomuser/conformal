@@ -1,10 +1,16 @@
 # Conformal
 
-Conformal is a TypeScript library designed to simplify the handling of form data and object manipulation in web applications. It provides utilities for parsing `FormData` into structured objects, validating them against schemas, and serializing values for use in HTML forms. The library also exports useful types like `Submission` and `PathsFromObject` for advanced use cases. This library is ideal for developers who need a robust solution for managing form data submissions in a type-safe manner.
+> Type-safe form submissions for the modern web.
+
+Conformal helps you work with native [`FormData`](https://developer.mozilla.org/docs/Web/API/FormData) the way frameworks are moving: directly. It solves two major pain points:
+
+- ✅ **Strongly typed FormData parsing** – Turn native `FormData` into real objects with full TypeScript inference (nested objects and arrays with dot/bracket notation).
+- ✅ **Canonical submission flow** – A single `Submission` object that preserves raw input, separates field vs. form errors, and standardizes the success/error states.
+
+Works everywhere: In browsers, Node.js, and edge runtimes with React, Vue, Svelte, or vanilla JavaScript. No framework lock-in.
 
 ### Table of Contents
 
-- [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
   - [parseWithSchema](#parsewithschema)
@@ -16,32 +22,6 @@ Conformal is a TypeScript library designed to simplify the handling of form data
   - [PathsFromObject](#pathsfromobject)
 - [Example: React Server Actions](#example-react-server-actions)
 - [License](#license)
-
-## Features
-
-### 🔒 **Type Safety Without Compromise**
-
-- **Zero Runtime Type Errors**: Parse `FormData` into fully typed objects with automatic TypeScript inference
-- **Schema-First Validation**: Integrate seamlessly with Zod, Valibot, or any Standard Schema implementation
-- **Compile-Time Guarantees**: Catch form structure issues before they reach production
-
-### 🎯 **Flexible Form Data Parsing**
-
-- **Dot Notation**: Handle nested objects with intuitive dot notation (`user.profile.name`)
-- **Bracket Notation**: Support arrays with bracket notation (`items[0].type`)
-- **Schema-Based Coercion**: Type coercion is handled easily through your validation schema
-
-### 🛡️ **Straightforward Error Handling**
-
-- **Never Lose User Input**: The submission pattern preserves all form data, even when validation fails
-- **Granular Error Control**: Separate field-specific errors from form-level errors for precise UI feedback
-- **Progressive Enhancement**: Build better error handling without breaking existing functionality
-
-### ⚡ **Works everywhere JS runs**
-
-- **Tree-Shakable**: Only import what you need
-- **Universal**: Works in browsers, Node.js, and edge runtimes
-- **Framework Agnostic**: Use with React, Vue, Svelte, or vanilla JavaScript
 
 ## Installation
 

@@ -16,8 +16,14 @@
   "types": "./dist/index.d.ts",
   "main": "./dist/index.js",
   "exports": {
-    "types": "./dist/index.d.ts",
-    "default": "./dist/index.js"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./zod": {
+      "types": "./dist/zod/index.d.ts",
+      "default": "./dist/zod/index.js"
+    }
   },
   "scripts": {
     "build": "tsc",
@@ -47,6 +53,14 @@
     "typescript": "^5.9.2",
     "vitest": "^3.2.4",
     "zod": "^4.1.1"
+  },
+  "peerDependencies": {
+    "zod": "^4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "zod": {
+      "optional": true
+    }
   },
   "dependencies": {
     "@standard-schema/spec": "^1.0.0",

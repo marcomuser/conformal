@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-export function string(params?: string | z.core.$ZodStringParams) {
+export function string(params?: Parameters<typeof z.string>[0]) {
   return z.preprocess((v) => {
     if (typeof v !== "string") {
       return v;
@@ -12,7 +12,7 @@ export function string(params?: string | z.core.$ZodStringParams) {
   }, z.string(params));
 }
 
-export function number(params?: string | z.core.$ZodNumberParams) {
+export function number(params?: Parameters<typeof z.number>[0]) {
   return z.preprocess((v) => {
     if (typeof v !== "string") {
       return v;
@@ -24,7 +24,7 @@ export function number(params?: string | z.core.$ZodNumberParams) {
   }, z.number(params));
 }
 
-export function bigint(params?: string | z.core.$ZodBigIntParams) {
+export function bigint(params?: Parameters<typeof z.bigint>[0]) {
   return z.preprocess((v) => {
     if (typeof v !== "string") {
       return v;
@@ -36,7 +36,7 @@ export function bigint(params?: string | z.core.$ZodBigIntParams) {
   }, z.bigint(params));
 }
 
-export function boolean(params?: string | z.core.$ZodBooleanParams) {
+export function boolean(params?: Parameters<typeof z.boolean>[0]) {
   return z.preprocess((v) => {
     if (typeof v !== "string") {
       return v;
@@ -48,7 +48,7 @@ export function boolean(params?: string | z.core.$ZodBooleanParams) {
   }, z.boolean(params));
 }
 
-export function date(params?: string | z.core.$ZodDateParams) {
+export function date(params?: Parameters<typeof z.date>[0]) {
   return z.preprocess((v) => {
     if (typeof v !== "string") {
       return v;
@@ -62,7 +62,7 @@ export function date(params?: string | z.core.$ZodDateParams) {
 
 export function enum_<T extends readonly [string, ...string[]]>(
   values: T,
-  params?: string | z.core.$ZodEnumParams,
+  params?: Parameters<typeof z.enum>[1],
 ) {
   return z.preprocess(
     (v) => {
@@ -78,7 +78,7 @@ export function enum_<T extends readonly [string, ...string[]]>(
   );
 }
 
-export function file(params?: string | z.core.$ZodFileParams) {
+export function file(params?: Parameters<typeof z.file>[0]) {
   return z.preprocess((v) => {
     if (!(v instanceof File)) {
       return v;

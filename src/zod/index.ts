@@ -5,4 +5,5 @@ export {
   date,
   bigint,
   enum_ as enum,
+  file,
 } from "./validators.js";

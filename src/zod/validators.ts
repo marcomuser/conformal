@@ -77,3 +77,15 @@ export function enum_<T extends readonly [string, ...string[]]>(
     z.enum(values, params),
   );
 }
+
+export function file(params?: z.core.$ZodFileParams) {
+  return z.preprocess((v) => {
+    if (!(v instanceof File)) {
+      return v;
+    }
+    if (v.size === 0) {
+      return undefined;
+    }
+    return v;
+  }, z.file(params));
+}

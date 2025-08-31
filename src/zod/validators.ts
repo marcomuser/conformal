@@ -89,3 +89,27 @@ export function file(params?: Parameters<typeof z.file>[0]) {
     return v;
   }, z.file(params));
 }
+
+export function email(params?: Parameters<typeof z.email>[0]) {
+  return z.preprocess((v) => {
+    if (typeof v !== "string") {
+      return v;
+    }
+    if (v === "") {
+      return undefined;
+    }
+    return v;
+  }, z.email(params));
+}
+
+export function url(params?: Parameters<typeof z.url>[0]) {
+  return z.preprocess((v) => {
+    if (typeof v !== "string") {
+      return v;
+    }
+    if (v === "") {
+      return undefined;
+    }
+    return v;
+  }, z.url(params));
+}

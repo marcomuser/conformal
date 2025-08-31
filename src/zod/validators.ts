@@ -29,7 +29,7 @@ export function bigint(params?: Parameters<typeof z.bigint>[0]) {
     if (typeof v !== "string") {
       return v;
     }
-    if (v === "") {
+    if (v.trim() === "") {
       return undefined;
     }
     return BigInt(v);

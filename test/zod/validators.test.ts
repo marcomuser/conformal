@@ -234,4 +234,38 @@ describe("zod validators preprocessing", () => {
       }
     });
   });
+
+  describe("bigint", () => {
+    it("should return undefined for empty strings", () => {
+      const schema = zf.bigint();
+      const result = schema.safeParse("");
+      expect(result.success).toBe(false);
+      expect(result.data).toBeUndefined();
+    });
+
+    it("should return undefined for whitespace-only strings", () => {
+      const schema = zf.bigint();
+      const result = schema.safeParse(" ");
+      expect(result.success).toBe(false);
+      expect(result.data).toBeUndefined();
+    });
+
+    it("should pass through non-string values unchanged", () => {
+      const schema = zf.bigint();
+      const result = schema.safeParse(42n);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toBe(42n);
+      }
+    });
+
+    it("should convert string numbers to bigint", () => {
+      const schema = zf.bigint();
+      const result = schema.safeParse("123");
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toBe(123n);
+      }
+    });
+  });
 });

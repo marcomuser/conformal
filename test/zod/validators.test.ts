@@ -35,6 +35,14 @@ describe("zod validators preprocessing", () => {
       expect(result.data).toBeUndefined();
     });
 
+    it("should return undefined for whitespace-only strings", () => {
+      const schema = zf.number();
+      const result = schema.safeParse(" ");
+      console.log(result);
+      expect(result.success).toBe(false);
+      expect(result.data).toBeUndefined();
+    });
+
     it("should pass through non-string values unchanged", () => {
       const schema = zf.number();
       const result = schema.safeParse(42);

@@ -17,7 +17,7 @@ export function number(params?: Parameters<typeof z.number>[0]) {
     if (typeof v !== "string") {
       return v;
     }
-    if (v === "") {
+    if (v.trim() === "") {
       return undefined;
     }
     return Number(v);

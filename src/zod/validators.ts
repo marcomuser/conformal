@@ -12,7 +12,7 @@ export function string(params?: string | z.core.$ZodStringParams) {
   }, z.string(params));
 }
 
-export function number(params?: z.core.$ZodNumberParams) {
+export function number(params?: string | z.core.$ZodNumberParams) {
   return z.preprocess((v) => {
     if (typeof v !== "string") {
       return v;
@@ -24,7 +24,7 @@ export function number(params?: z.core.$ZodNumberParams) {
   }, z.number(params));
 }
 
-export function bigint(params?: z.core.$ZodBigIntParams) {
+export function bigint(params?: string | z.core.$ZodBigIntParams) {
   return z.preprocess((v) => {
     if (typeof v !== "string") {
       return v;
@@ -36,7 +36,7 @@ export function bigint(params?: z.core.$ZodBigIntParams) {
   }, z.bigint(params));
 }
 
-export function boolean(params?: z.core.$ZodBooleanParams) {
+export function boolean(params?: string | z.core.$ZodBooleanParams) {
   return z.preprocess((v) => {
     if (typeof v !== "string") {
       return v;
@@ -48,7 +48,7 @@ export function boolean(params?: z.core.$ZodBooleanParams) {
   }, z.boolean(params));
 }
 
-export function date(params?: z.core.$ZodDateParams) {
+export function date(params?: string | z.core.$ZodDateParams) {
   return z.preprocess((v) => {
     if (typeof v !== "string") {
       return v;
@@ -62,7 +62,7 @@ export function date(params?: z.core.$ZodDateParams) {
 
 export function enum_<T extends readonly [string, ...string[]]>(
   values: T,
-  params?: z.core.$ZodEnumParams,
+  params?: string | z.core.$ZodEnumParams,
 ) {
   return z.preprocess(
     (v) => {
@@ -78,7 +78,7 @@ export function enum_<T extends readonly [string, ...string[]]>(
   );
 }
 
-export function file(params?: z.core.$ZodFileParams) {
+export function file(params?: string | z.core.$ZodFileParams) {
   return z.preprocess((v) => {
     if (!(v instanceof File)) {
       return v;

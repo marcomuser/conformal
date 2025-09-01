@@ -326,7 +326,7 @@ export function UserForm() {
 - **Form Preservation**: `submission.input` preserves raw user input even when validation fails, preventing data loss
 - **Granular Error Handling**: `submission.fieldErrors` provides field-specific errors for precise UI feedback
 - **Form-Level Validation**: `submission.formErrors` handles cross-field validation and server errors
-- **Unified State**: Single `submission` object handles all form states (idle, success, error) consistently
+- **Unified State**: Single `submission` object handles all submission states (idle, success, error) consistently
 
 ## License
 

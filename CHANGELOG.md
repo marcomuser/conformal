@@ -1,5 +1,11 @@
 # conformal
 
+## 1.3.0
+
+### Minor Changes
+
+- [#14](https://github.com/marcomuser/conformal/pull/14) [`5d5a4dd`](https://github.com/marcomuser/conformal/commit/5d5a4dd823649d90a78d4acb1c8bc611dcee9a85) Thanks [@marcomuser](https://github.com/marcomuser)! - Add zod field schemas
+
 ## 1.2.1
 
 ### Patch Changes

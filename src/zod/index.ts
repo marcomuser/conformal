@@ -8,4 +8,4 @@ export {
   file,
   url,
   email,
-} from "./validators.js";
+} from "./schemas.js";

@@ -20,6 +20,7 @@ Works everywhere: In browsers, Node.js, and edge runtimes with React, Vue, Svelt
   - [getPath](#getpath)
   - [setPath](#setpath)
   - [PathsFromObject](#pathsfromobject)
+- [Zod Field Schemas](#zod-field-schemas)
 - [Example: React Server Actions](#example-react-server-actions)
 - [License](#license)
 
@@ -228,6 +229,29 @@ interface UserForm {
 
 type Paths = PathsFromObject<UserForm>;
 // Paths will be "user" | "user.name" | "user.profilePicture" | "user.contacts" | `user.contacts[${number}]` | `user.contacts[${number}].type` | `user.contacts[${number}].value`
+```
+
+## Zod Field Schemas
+
+Conformal provides Zod utilities that are **thin preprocessing wrappers** around Zod schemas. They automatically handle form input patterns (empty strings, type coercion, boolean detection) while maintaining **100% Zod compatibility**.
+
+**Zero learning curve** - use them exactly like regular Zod schemas with all methods (`.optional()`, `.array()`, `.min()`, etc.). Import from `conformal/zod` to keep your bundle lean if you don't use Zod.
+
+```typescript
+import * as z from "zod";
+import * as zf from "conformal/zod";
+
+const formSchema = z.object({
+  name: zf.string().optional(),
+  email: zf.email(),
+  age: zf.number().min(13, "Must be at least 13 years old"),
+  birthDate: zf.date(),
+  acceptTerms: zf.boolean(),
+  profilePicture: zf.file(),
+  accountType: zf.enum(["personal", "business"]),
+  website: zf.url().optional(),
+  transactionAmount: zf.bigint(),
+});
 ```
 
 ## Example: React Server Actions

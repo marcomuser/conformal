@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
-import * as zf from "../../src/zod/validators";
+import * as zf from "../../src/zod/schemas";
 
-describe("zod validators preprocessing", () => {
+describe("zod schemas preprocessing", () => {
   describe("string", () => {
     it("should return undefined for empty strings", () => {
       const schema = zf.string();

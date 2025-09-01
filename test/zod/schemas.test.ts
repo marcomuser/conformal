@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import * as zf from "../../src/zod/schemas";
+import * as zf from "../../src/zod/schemas.js";
 
 describe("zod schemas preprocessing", () => {
   describe("string", () => {

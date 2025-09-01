@@ -256,30 +256,7 @@ const formSchema = z.object({
 
 ## Example: React Server Actions
 
-Handling form data in React applications often involves dealing with untyped `FormData` objects, which can lead to runtime errors and cumbersome data handling. Here's a simple example of a React action without type safety:
-
-```tsx
-async function submitAction(formData) {
-  "use server";
-  const name = formData.get("name"); // File | string | null
-  const age = formData.get("age"); // File | string | null
-
-  // Manual validation, no submission state management, React resets form by default
-  console.log({ name, age });
-}
-
-export function Form() {
-  return (
-    <form action={submitAction}>
-      <input name="name" placeholder="Name" />
-      <input name="age" type="number" placeholder="Age" />
-      <button type="submit">Submit</button>
-    </form>
-  );
-}
-```
-
-By introducing `parseWithSchema`, you can ensure that the form data is parsed and validated against a schema, ensuring that form data adheres to expected types and structures:
+Here's how to get type-safe form data, built-in validation, and complete control over submission state with Conformal:
 
 ```tsx
 import { useActionState } from "react";

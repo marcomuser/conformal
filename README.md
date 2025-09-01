@@ -263,6 +263,8 @@ async function submitAction(formData) {
   "use server";
   const name = formData.get("name"); // File | string | null
   const age = formData.get("age"); // File | string | null
+
+  // Manual validation, no submission state management, React resets form by default
   console.log({ name, age });
 }
 

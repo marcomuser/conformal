@@ -233,7 +233,7 @@ type Paths = PathsFromObject<UserForm>;
 
 ## Zod Field Schemas
 
-Conformal provides Zod utilities that are **thin preprocessing wrappers** around Zod schemas. They automatically handle form input patterns (empty strings, type coercion, boolean detection) while maintaining **100% Zod compatibility**.
+Conformal provides optional Zod utilities that are **thin preprocessing wrappers** around Zod schemas. They automatically handle form input patterns (empty strings, type coercion, boolean detection) while maintaining **100% Zod compatibility**.
 
 **Zero learning curve** - use them exactly like regular Zod schemas with all methods (`.optional()`, `.array()`, `.min()`, etc.). Import from `conformal/zod` to keep your bundle lean if you don't use Zod.
 

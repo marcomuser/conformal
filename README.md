@@ -256,36 +256,17 @@ const formSchema = z.object({
 
 ## Example: React Server Actions
 
-Handling form data in React applications often involves dealing with untyped `FormData` objects, which can lead to runtime errors and cumbersome data handling. Here's a simple example of a React action without type safety:
+Here's how to get type-safe form data, built-in validation, and complete control over submission state with Conformal:
 
 ```tsx
-async function submitAction(formData) {
-  "use server";
-  const name = formData.get("name"); // File | string | null
-  const age = formData.get("age"); // File | string | null
-  console.log({ name, age });
-}
-
-export function Form() {
-  return (
-    <form action={submitAction}>
-      <input name="name" />
-      <input name="age" />
-      <button type="submit">Submit</button>
-    </form>
-  );
-}
-```
-
-By introducing `parseWithSchema`, you can ensure that the form data is parsed and validated against a schema, ensuring that form data adheres to expected types and structures:
-
-```tsx
+import { useActionState } from "react";
 import { parseWithSchema } from "conformal";
 import * as z from "zod";
+import * as zf from "conformal/zod";
 
 const schema = z.object({
-  name: z.string(),
-  age: z.coerce.number(),
+  name: zf.string(),
+  age: zf.number(),
 });
 
 async function submitAction(formData) {
@@ -296,16 +277,43 @@ async function submitAction(formData) {
     return submission;
   }
 
-  const name = submission.value.name; // string
-  const age = submission.value.age; // number
-  console.log({ name, age });
+  // Type-safe access to validated data
+  const { name, age } = submission.value;
+  await saveInDb({ name, age });
+
+  // Reset form on successful submission
+  return { ...submission, input: {} };
 }
 
-export function Form() {
+export function UserForm() {
+  const [submission, formAction] = useActionState(submitAction, {
+    status: "idle",
+    input: {},
+    fieldErrors: {},
+    formErrors: [],
+  });
+
   return (
-    <form action={submitAction}>
-      <input name="name" />
-      <input name="age" />
+    <form action={formAction}>
+      <input
+        name="name"
+        placeholder="Name"
+        defaultValue={submission.input.name}
+      />
+      {submission.fieldErrors.name && (
+        <span>{submission.fieldErrors.name.at(0)}</span>
+      )}
+
+      <input
+        name="age"
+        type="number"
+        placeholder="Age"
+        defaultValue={submission.input.age}
+      />
+      {submission.fieldErrors.age && (
+        <span>{submission.fieldErrors.age.at(0)}</span>
+      )}
+
       <button type="submit">Submit</button>
     </form>
   );
@@ -314,9 +322,11 @@ export function Form() {
 
 **Key Benefits of the Submission Pattern:**
 
-- **Form Preservation**: The submission object contains raw user input (`submission.input`) to prevent data loss when validation fails
-- **Targeted Error Display**: Field-specific validation errors (`submission.fieldErrors`) allow you to show errors next to specific form fields
-- **Form-Level Feedback**: General validation errors (`submission.formErrors`) can be displayed as summary messages
+- **Type Safety**: `submission.value` gives you fully typed, validated data when validation succeeds
+- **Form Preservation**: `submission.input` preserves raw user input even when validation fails, preventing data loss
+- **Granular Error Handling**: `submission.fieldErrors` provides field-specific errors for precise UI feedback
+- **Form-Level Validation**: `submission.formErrors` handles cross-field validation and server errors
+- **Unified State**: Single `submission` object handles all submission states (idle, success, error) consistently
 
 ## License
 

@@ -3,7 +3,7 @@ import type { InputValue } from "./types.js";
 
 export interface SerializeOptions {
   /** The string value to use for boolean `true`. Defaults to "on". */
-  booleanTrueValue?: string;
+  booleanTrueValue?: "true" | "on" | "1" | "yes";
 }
 
 /**

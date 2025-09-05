@@ -2,7 +2,7 @@ import type { StandardSchemaV1 } from "@standard-schema/spec";
 import type { UnknownRecord } from "type-fest";
 import { setPath } from "./path.js";
 import { toSubmission } from "./submission.js";
-import type { AnyRecord, ParsedValue, SchemaResult } from "./types.js";
+import type { AnyRecord, InputValue, SchemaResult } from "./types.js";
 
 /**
  * Parses a `FormData` object into a structured object with typed values.
@@ -24,7 +24,7 @@ import type { AnyRecord, ParsedValue, SchemaResult } from "./types.js";
  */
 export function parse<FormValues extends AnyRecord = UnknownRecord>(
   formData: FormData,
-): ParsedValue<FormValues> {
+): InputValue<FormValues> {
   let formValues: AnyRecord = {};
   const keys = new Set(formData.keys());
 
@@ -34,7 +34,7 @@ export function parse<FormValues extends AnyRecord = UnknownRecord>(
     formValues = setPath(formValues, key, val);
   }
 
-  return formValues as ParsedValue<FormValues>;
+  return formValues as InputValue<FormValues>;
 }
 
 /**

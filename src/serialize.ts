@@ -20,7 +20,6 @@ export interface SerializeOptions {
  * serialize(123); // Returns "123"
  * serialize(true); // Returns "on"
  * serialize(new Date()) // Returns "2025-01-17T17:04:25.059Z"
- * serialize(null); // Returns undefined
  * serialize({username: "test", age: 100}) // Returns {username: "test", age: "100"}
  * ```
  */

@@ -178,15 +178,14 @@ const result = {
 
 ### serialize
 
-The `serialize` function transforms values for use in HTML form elements. It is particularly useful for setting default values in form fields, especially when integrating with a backend to pre-fill forms with existing data. By converting various data types into a format suitable for HTML attributes, `serialize` ensures that values are correctly displayed in form elements.
+The `serialize` function transforms fully typed values back to the InputValue shape for use in form elements. This is particularly useful for setting default values in form fields when you have validated data from a previous submission and want to pre-fill forms with existing data from a database.
 
 ```typescript
 import { serialize } from "conformal";
 
 console.log(serialize(123)); // "123"
-console.log(serialize(true)); // true
+console.log(serialize(true)); // "on"
 console.log(serialize(new Date())); // "2025-01-17T17:04:25.059Z"
-console.log(serialize(null)); // undefined
 console.log(serialize({ username: "test", age: 100 })); // { username: "test", age: "100" }
 ```
 
@@ -260,13 +259,14 @@ Here's how to get type-safe form data, built-in validation, and complete control
 
 ```tsx
 import { useActionState } from "react";
-import { parseWithSchema } from "conformal";
+import { parseWithSchema, serialize } from "conformal";
 import * as z from "zod";
 import * as zf from "conformal/zod";
 
 const schema = z.object({
   name: zf.string(),
   age: zf.number(),
+  acceptTerms: zf.boolean(),
 });
 
 async function submitAction(formData) {
@@ -278,40 +278,53 @@ async function submitAction(formData) {
   }
 
   // Type-safe access to validated data
-  const { name, age } = submission.value;
-  await saveInDb({ name, age });
+  const { name, age, acceptTerms } = submission.value;
+  await saveInDb({ name, age, acceptTerms });
 
   // Reset form on successful submission
   return { ...submission, input: {} };
 }
 
-export function UserForm() {
+export function UserForm({
+  defaultValues,
+}: {
+  defaultValues: z.infer<typeof schema>;
+}) {
   const [submission, formAction] = useActionState(submitAction, {
     status: "idle",
-    input: {},
+    input: serialize(defaultValues),
     fieldErrors: {},
     formErrors: [],
   });
 
   return (
     <form action={formAction}>
-      <input
-        name="name"
-        placeholder="Name"
-        defaultValue={submission.input.name}
-      />
+      <label>
+        Name
+        <input name="name" defaultValue={submission.input.name} />
+      </label>
       {submission.fieldErrors.name && (
         <span>{submission.fieldErrors.name.at(0)}</span>
       )}
 
-      <input
-        name="age"
-        type="number"
-        placeholder="Age"
-        defaultValue={submission.input.age}
-      />
+      <label>
+        Age
+        <input name="age" type="number" defaultValue={submission.input.age} />
+      </label>
       {submission.fieldErrors.age && (
         <span>{submission.fieldErrors.age.at(0)}</span>
+      )}
+
+      <label>
+        <input
+          name="acceptTerms"
+          type="checkbox"
+          defaultChecked={submission.input.acceptTerms === "on"}
+        />
+        I accept the terms and conditions
+      </label>
+      {submission.fieldErrors.acceptTerms && (
+        <span>{submission.fieldErrors.acceptTerms.at(0)}</span>
       )}
 
       <button type="submit">Submit</button>

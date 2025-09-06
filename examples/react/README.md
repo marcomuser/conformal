@@ -4,7 +4,7 @@ Type-safe form submissions with React 19's `useActionState` hook.
 
 ## 🚀 Try it on StackBlitz
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/marcomuser/conformal/tree/main/examples/react)
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/marcomuser/conformal/tree/main/examples/react?embed=1&theme=dark&preset=node&file=src/Form.tsx)
 
 ## Local Development
 

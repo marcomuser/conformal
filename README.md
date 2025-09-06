@@ -255,7 +255,7 @@ const formSchema = z.object({
 
 ## Live Examples
 
-- **React** - [GitHub](https://github.com/marcomuser/conformal/tree/main/examples/react) | [StackBlitz](https://stackblitz.com/github/marcomuser/conformal/tree/main/examples/react)
+- **React** - [GitHub](https://github.com/marcomuser/conformal/tree/main/examples/react) | [StackBlitz](https://stackblitz.com/github/marcomuser/conformal/tree/main/examples/react?embed=1&theme=dark&preset=node&file=src/Form.tsx)
 
 ## License
 

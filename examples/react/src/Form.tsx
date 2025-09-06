@@ -4,18 +4,17 @@ import * as z from "zod";
 import * as zf from "conformal/zod";
 import "./Form.css";
 
+type SchemaValues = z.infer<typeof schema>;
 const schema = z.object({
   name: zf.string(),
   age: zf.number(),
   acceptTerms: zf.boolean(),
 });
 
-type FormSchemaValues = z.infer<typeof schema>;
-
 async function submitAction(
-  lastSubmission: Submission<FormSchemaValues>,
+  lastSubmission: Submission<SchemaValues>,
   formData: FormData,
-): Promise<Submission<FormSchemaValues>> {
+): Promise<Submission<SchemaValues>> {
   const submission = parseWithSchema(schema, formData).submission();
 
   if (submission.status !== "success") {
@@ -32,7 +31,7 @@ async function submitAction(
 export function Form({
   defaultValues,
 }: {
-  defaultValues: Partial<FormSchemaValues>;
+  defaultValues: Partial<SchemaValues>;
 }) {
   const [submission, formAction] = useActionState(submitAction, {
     status: "idle",

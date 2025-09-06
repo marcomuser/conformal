@@ -1,5 +1,11 @@
 # conformal
 
+## 1.3.1
+
+### Patch Changes
+
+- [#17](https://github.com/marcomuser/conformal/pull/17) [`2dd994d`](https://github.com/marcomuser/conformal/commit/2dd994d53dbbbb0466ef1befe32331069db4be03) Thanks [@marcomuser](https://github.com/marcomuser)! - Align serialize with parse behavior
+
 ## 1.3.0
 
 ### Minor Changes

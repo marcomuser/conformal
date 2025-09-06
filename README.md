@@ -21,7 +21,7 @@ Works everywhere: In browsers, Node.js, and edge runtimes with React, Vue, Svelt
   - [setPath](#setpath)
   - [PathsFromObject](#pathsfromobject)
 - [Zod Field Schemas](#zod-field-schemas)
-- [Live Examples](#🚀-live-examples)
+- [Live Examples](#live-examples)
 - [License](#license)
 
 ## Installation
@@ -253,9 +253,9 @@ const formSchema = z.object({
 });
 ```
 
-## 🚀 Live Examples
+## Live Examples
 
-- **React** - [GitHub](https://github.com/marcomuser/conformal/tree/main/examples/react) | [StackBlitz](https://stackblitz.com/github/marcomuser/conformal/tree/main/examples/react)
+- **React** - [GitHub](https://github.com/marcomuser/conformal/tree/main/examples/react) | [StackBlitz](https://stackblitz.com/github/marcomuser/conformal/tree/main/examples/react?embed=1&theme=dark&preset=node&file=src/Form.tsx)
 
 ## License
 

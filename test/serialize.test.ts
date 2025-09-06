@@ -2,19 +2,20 @@ import { describe, expect, it } from "vitest";
 import { serialize } from "../src/serialize.js";
 
 describe("serialize", () => {
-  it("serializes null to undefined", () => {
-    expect(serialize(null)).toBeUndefined();
-  });
-
   it("serializes numbers to strings", () => {
     expect(serialize(123)).toBe("123");
     expect(serialize(0)).toBe("0");
     expect(serialize(-42)).toBe("-42");
   });
 
-  it("does not serialize booleans", () => {
-    expect(serialize(true)).toBe(true);
-    expect(serialize(false)).toBe(false);
+  it("serializes booleans to strings", () => {
+    expect(serialize(true)).toBe("on");
+    expect(serialize(false)).toBe("");
+  });
+
+  it("serializes booleans with custom true value", () => {
+    expect(serialize(true, { booleanTrueValue: "yes" })).toBe("yes");
+    expect(serialize(false, { booleanTrueValue: "yes" })).toBe("");
   });
 
   it("serializes dates to ISO strings", () => {
@@ -32,7 +33,7 @@ describe("serialize", () => {
     expect(serialize(obj)).toEqual({
       a: "1",
       b: "hello",
-      c: true,
+      c: "on",
       d: "2024-02-20T10:00:00.000Z",
     });
   });
@@ -47,7 +48,7 @@ describe("serialize", () => {
     expect(serialize(arr)).toEqual([
       "1",
       "test",
-      false,
+      "",
       "2024-03-15T15:30:00.000Z",
     ]);
   });
@@ -58,7 +59,7 @@ describe("serialize", () => {
       d: { e: [2, 3] },
     };
     expect(serialize(data)).toEqual({
-      a: ["1", { b: true, c: "2024-10-10T00:00:00.000Z" }],
+      a: ["1", { b: "on", c: "2024-10-10T00:00:00.000Z" }],
       d: { e: ["2", "3"] },
     });
   });

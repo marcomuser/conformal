@@ -21,7 +21,7 @@ Works everywhere: In browsers, Node.js, and edge runtimes with React, Vue, Svelt
   - [setPath](#setpath)
   - [PathsFromObject](#pathsfromobject)
 - [Zod Field Schemas](#zod-field-schemas)
-- [Example: React Server Actions](#example-react-server-actions)
+- [Live Examples](#🚀-live-examples)
 - [License](#license)
 
 ## Installation
@@ -178,15 +178,14 @@ const result = {
 
 ### serialize
 
-The `serialize` function transforms values for use in HTML form elements. It is particularly useful for setting default values in form fields, especially when integrating with a backend to pre-fill forms with existing data. By converting various data types into a format suitable for HTML attributes, `serialize` ensures that values are correctly displayed in form elements.
+The `serialize` function transforms fully typed values back to the InputValue shape for use in form elements. This is particularly useful for setting default values in form fields when you have validated data from a previous submission and want to pre-fill forms with existing data from a database.
 
 ```typescript
 import { serialize } from "conformal";
 
 console.log(serialize(123)); // "123"
-console.log(serialize(true)); // true
+console.log(serialize(true)); // "on"
 console.log(serialize(new Date())); // "2025-01-17T17:04:25.059Z"
-console.log(serialize(null)); // undefined
 console.log(serialize({ username: "test", age: 100 })); // { username: "test", age: "100" }
 ```
 
@@ -254,79 +253,9 @@ const formSchema = z.object({
 });
 ```
 
-## Example: React Server Actions
+## 🚀 Live Examples
 
-Here's how to get type-safe form data, built-in validation, and complete control over submission state with Conformal:
-
-```tsx
-import { useActionState } from "react";
-import { parseWithSchema } from "conformal";
-import * as z from "zod";
-import * as zf from "conformal/zod";
-
-const schema = z.object({
-  name: zf.string(),
-  age: zf.number(),
-});
-
-async function submitAction(formData) {
-  "use server";
-  const submission = parseWithSchema(schema, formData).submission();
-
-  if (submission.status !== "success") {
-    return submission;
-  }
-
-  // Type-safe access to validated data
-  const { name, age } = submission.value;
-  await saveInDb({ name, age });
-
-  // Reset form on successful submission
-  return { ...submission, input: {} };
-}
-
-export function UserForm() {
-  const [submission, formAction] = useActionState(submitAction, {
-    status: "idle",
-    input: {},
-    fieldErrors: {},
-    formErrors: [],
-  });
-
-  return (
-    <form action={formAction}>
-      <input
-        name="name"
-        placeholder="Name"
-        defaultValue={submission.input.name}
-      />
-      {submission.fieldErrors.name && (
-        <span>{submission.fieldErrors.name.at(0)}</span>
-      )}
-
-      <input
-        name="age"
-        type="number"
-        placeholder="Age"
-        defaultValue={submission.input.age}
-      />
-      {submission.fieldErrors.age && (
-        <span>{submission.fieldErrors.age.at(0)}</span>
-      )}
-
-      <button type="submit">Submit</button>
-    </form>
-  );
-}
-```
-
-**Key Benefits of the Submission Pattern:**
-
-- **Type Safety**: `submission.value` gives you fully typed, validated data when validation succeeds
-- **Form Preservation**: `submission.input` preserves raw user input even when validation fails, preventing data loss
-- **Granular Error Handling**: `submission.fieldErrors` provides field-specific errors for precise UI feedback
-- **Form-Level Validation**: `submission.formErrors` handles cross-field validation and server errors
-- **Unified State**: Single `submission` object handles all submission states (idle, success, error) consistently
+- **React** - [GitHub](https://github.com/marcomuser/conformal/tree/main/examples/react) | [StackBlitz](https://stackblitz.com/github/marcomuser/conformal/tree/main/examples/react)
 
 ## License
 

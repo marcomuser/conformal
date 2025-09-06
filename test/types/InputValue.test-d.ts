@@ -1,22 +1,22 @@
 import { describe, expectTypeOf, it } from "vitest";
-import type { ParsedValue } from "../../src/types.js";
+import type { InputValue } from "../../src/types.js";
 
-describe("ParsedValue", () => {
+describe("InputValue", () => {
   it("should handle primitive types", () => {
-    expectTypeOf<ParsedValue<string>>().toEqualTypeOf<string>();
-    expectTypeOf<ParsedValue<number>>().toEqualTypeOf<string>();
-    expectTypeOf<ParsedValue<boolean>>().toEqualTypeOf<string>();
-    expectTypeOf<ParsedValue<Date>>().toEqualTypeOf<string>();
-    expectTypeOf<ParsedValue<bigint>>().toEqualTypeOf<string>();
+    expectTypeOf<InputValue<string>>().toEqualTypeOf<string>();
+    expectTypeOf<InputValue<number>>().toEqualTypeOf<string>();
+    expectTypeOf<InputValue<boolean>>().toEqualTypeOf<string>();
+    expectTypeOf<InputValue<Date>>().toEqualTypeOf<string>();
+    expectTypeOf<InputValue<bigint>>().toEqualTypeOf<string>();
   });
 
   it("should handle Blob and File", () => {
-    expectTypeOf<ParsedValue<Blob>>().toEqualTypeOf<File>();
-    expectTypeOf<ParsedValue<File>>().toEqualTypeOf<File>();
+    expectTypeOf<InputValue<Blob>>().toEqualTypeOf<File>();
+    expectTypeOf<InputValue<File>>().toEqualTypeOf<File>();
   });
 
   it("should handle File in array", () => {
-    expectTypeOf<ParsedValue<File[]>>().toEqualTypeOf<File[]>();
+    expectTypeOf<InputValue<File[]>>().toEqualTypeOf<File[]>();
   });
 
   it("should handle flat object", () => {
@@ -28,7 +28,7 @@ describe("ParsedValue", () => {
       name: string;
       age: string;
     };
-    expectTypeOf<ParsedValue<TestSchema>>().toEqualTypeOf<ExpectedType>();
+    expectTypeOf<InputValue<TestSchema>>().toEqualTypeOf<ExpectedType>();
   });
 
   it("should handle nested objects", () => {
@@ -48,18 +48,18 @@ describe("ParsedValue", () => {
         };
       };
     };
-    expectTypeOf<ParsedValue<TestSchema>>().toEqualTypeOf<ExpectedType>();
+    expectTypeOf<InputValue<TestSchema>>().toEqualTypeOf<ExpectedType>();
   });
 
   it("should handle arrays of primitives", () => {
-    expectTypeOf<ParsedValue<string[]>>().toEqualTypeOf<string[]>();
-    expectTypeOf<ParsedValue<number[]>>().toEqualTypeOf<string[]>();
+    expectTypeOf<InputValue<string[]>>().toEqualTypeOf<string[]>();
+    expectTypeOf<InputValue<number[]>>().toEqualTypeOf<string[]>();
   });
 
   it("should handle arrays of objects", () => {
     type TestSchema = { value: number };
     type ExpectedType = { value: string }[];
-    expectTypeOf<ParsedValue<TestSchema[]>>().toEqualTypeOf<ExpectedType>();
+    expectTypeOf<InputValue<TestSchema[]>>().toEqualTypeOf<ExpectedType>();
   });
 
   it("should handle complex nested types", () => {
@@ -95,7 +95,7 @@ describe("ParsedValue", () => {
       };
     };
 
-    expectTypeOf<ParsedValue<TestSchema>>().toEqualTypeOf<ExpectedType>();
+    expectTypeOf<InputValue<TestSchema>>().toEqualTypeOf<ExpectedType>();
   });
 
   it("should handle complex nested interfaces", () => {
@@ -131,7 +131,7 @@ describe("ParsedValue", () => {
       };
     };
 
-    expectTypeOf<ParsedValue<TestSchema>>().toEqualTypeOf<ExpectedType>();
+    expectTypeOf<InputValue<TestSchema>>().toEqualTypeOf<ExpectedType>();
   });
 
   it("should handle union types in objects", () => {
@@ -142,7 +142,7 @@ describe("ParsedValue", () => {
       value: string;
     };
 
-    expectTypeOf<ParsedValue<TestSchema>>().toEqualTypeOf<ExpectedType>();
+    expectTypeOf<InputValue<TestSchema>>().toEqualTypeOf<ExpectedType>();
   });
 
   it("should handle string union types", () => {
@@ -153,6 +153,6 @@ describe("ParsedValue", () => {
       value: "birds" | "cats" | "dogs" | "other";
     };
 
-    expectTypeOf<ParsedValue<TestSchema>>().toEqualTypeOf<ExpectedType>();
+    expectTypeOf<InputValue<TestSchema>>().toEqualTypeOf<ExpectedType>();
   });
 });

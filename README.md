@@ -21,7 +21,7 @@ Works everywhere: In browsers, Node.js, and edge runtimes with React, Vue, Svelt
   - [setPath](#setpath)
   - [PathsFromObject](#pathsfromobject)
 - [Zod Field Schemas](#zod-field-schemas)
-- [Example: React Server Actions](#example-react-server-actions)
+- [Live Examples](#🚀-live-examples)
 - [License](#license)
 
 ## Installation
@@ -253,93 +253,9 @@ const formSchema = z.object({
 });
 ```
 
-## Example: React Server Actions
+## 🚀 Live Examples
 
-Here's how to get type-safe form data, built-in validation, and complete control over submission state with Conformal:
-
-```tsx
-import { useActionState } from "react";
-import { parseWithSchema, serialize } from "conformal";
-import * as z from "zod";
-import * as zf from "conformal/zod";
-
-const schema = z.object({
-  name: zf.string(),
-  age: zf.number(),
-  acceptTerms: zf.boolean(),
-});
-
-async function submitAction(formData) {
-  "use server";
-  const submission = parseWithSchema(schema, formData).submission();
-
-  if (submission.status !== "success") {
-    return submission;
-  }
-
-  // Type-safe access to validated data
-  const { name, age, acceptTerms } = submission.value;
-  await saveInDb({ name, age, acceptTerms });
-
-  // Reset form on successful submission
-  return { ...submission, input: {} };
-}
-
-export function UserForm({
-  defaultValues,
-}: {
-  defaultValues: z.infer<typeof schema>;
-}) {
-  const [submission, formAction] = useActionState(submitAction, {
-    status: "idle",
-    input: serialize(defaultValues),
-    fieldErrors: {},
-    formErrors: [],
-  });
-
-  return (
-    <form action={formAction}>
-      <label>
-        Name
-        <input name="name" defaultValue={submission.input.name} />
-      </label>
-      {submission.fieldErrors.name && (
-        <span>{submission.fieldErrors.name.at(0)}</span>
-      )}
-
-      <label>
-        Age
-        <input name="age" type="number" defaultValue={submission.input.age} />
-      </label>
-      {submission.fieldErrors.age && (
-        <span>{submission.fieldErrors.age.at(0)}</span>
-      )}
-
-      <label>
-        <input
-          name="acceptTerms"
-          type="checkbox"
-          defaultChecked={submission.input.acceptTerms === "on"}
-        />
-        I accept the terms and conditions
-      </label>
-      {submission.fieldErrors.acceptTerms && (
-        <span>{submission.fieldErrors.acceptTerms.at(0)}</span>
-      )}
-
-      <button type="submit">Submit</button>
-    </form>
-  );
-}
-```
-
-**Key Benefits of the Submission Pattern:**
-
-- **Type Safety**: `submission.value` gives you fully typed, validated data when validation succeeds
-- **Form Preservation**: `submission.input` preserves raw user input even when validation fails, preventing data loss
-- **Granular Error Handling**: `submission.fieldErrors` provides field-specific errors for precise UI feedback
-- **Form-Level Validation**: `submission.formErrors` handles cross-field validation and server errors
-- **Unified State**: Single `submission` object handles all submission states (idle, success, error) consistently
+- **React** - [GitHub](https://github.com/marcomuser/conformal/tree/main/examples/react) | [StackBlitz](https://stackblitz.com/github/marcomuser/conformal/tree/main/examples/react)
 
 ## License
 

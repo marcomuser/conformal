@@ -1,10 +1,5 @@
 import { useActionState } from "react";
-import {
-  parseWithSchema,
-  serialize,
-  type InputValue,
-  type Submission,
-} from "conformal";
+import { parseWithSchema, serialize, type Submission } from "conformal";
 import * as z from "zod";
 import * as zf from "conformal/zod";
 import "./Form.css";
@@ -20,7 +15,7 @@ type FormSchemaValues = z.infer<typeof schema>;
 async function submitAction(
   lastSubmission: Submission<FormSchemaValues>,
   formData: FormData,
-) {
+): Promise<Submission<FormSchemaValues>> {
   const submission = parseWithSchema(schema, formData).submission();
 
   if (submission.status !== "success") {
@@ -31,7 +26,7 @@ async function submitAction(
   console.log("Saving to database:", submission.value);
 
   // Reset form on successful submission
-  return { ...submission, input: {} as InputValue<FormSchemaValues> };
+  return { ...submission, input: {} };
 }
 
 export function Form({
@@ -44,7 +39,7 @@ export function Form({
     input: serialize(defaultValues),
     fieldErrors: {},
     formErrors: [],
-  } satisfies Submission<FormSchemaValues>);
+  });
 
   return (
     <div className="app">

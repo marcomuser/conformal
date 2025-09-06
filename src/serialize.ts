@@ -2,7 +2,9 @@ import type { UnknownRecord } from "type-fest";
 import type { InputValue } from "./types.js";
 
 export interface SerializeOptions {
-  /** The string value to use for boolean `true`. Defaults to "on". */
+  /** The string value to use for boolean `true`.
+   * @default "on"
+   */
   booleanTrueValue?: "true" | "on" | "1" | "yes";
 }
 

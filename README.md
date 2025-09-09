@@ -12,6 +12,7 @@ Works everywhere: In browsers, Node.js, and edge runtimes with React, Vue, Svelt
 ### Table of Contents
 
 - [Installation](#installation)
+- [Live Examples](#live-examples)
 - [Usage](#usage)
   - [parseWithSchema](#parsewithschema)
   - [Submission](#submission)
@@ -21,7 +22,6 @@ Works everywhere: In browsers, Node.js, and edge runtimes with React, Vue, Svelt
   - [setPath](#setpath)
   - [PathsFromObject](#pathsfromobject)
 - [Zod Field Schemas](#zod-field-schemas)
-- [Live Examples](#live-examples)
 - [License](#license)
 
 ## Installation
@@ -31,6 +31,11 @@ Install Conformal via npm or the package manager of your choice:
 ```bash
 npm install conformal
 ```
+
+## Live Examples
+
+- **React** - [GitHub](https://github.com/marcomuser/conformal/tree/main/examples/react) | [StackBlitz](https://stackblitz.com/github/marcomuser/conformal/tree/main/examples/react?embed=1&theme=dark&preset=node&file=src/Form.tsx)
+- **SvelteKit** - [GitHub](https://github.com/marcomuser/conformal/tree/main/examples/svelte) | [StackBlitz](https://stackblitz.com/github/marcomuser/conformal/tree/main/examples/svelte?embed=1&theme=dark&preset=node&file=src/routes/+page.svelte)
 
 ## Usage
 
@@ -252,10 +257,6 @@ const formSchema = z.object({
   transactionAmount: zf.bigint(),
 });
 ```
-
-## Live Examples
-
-- **React** - [GitHub](https://github.com/marcomuser/conformal/tree/main/examples/react) | [StackBlitz](https://stackblitz.com/github/marcomuser/conformal/tree/main/examples/react?embed=1&theme=dark&preset=node&file=src/Form.tsx)
 
 ## License
 

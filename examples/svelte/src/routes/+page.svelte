@@ -1,10 +1,8 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-
   import type { PageProps } from "./$types";
 
   let { data, form }: PageProps = $props();
-
   const submission = $derived(form || data.submission);
 </script>
 
@@ -56,7 +54,7 @@
       {/if}
     </div>
 
-    {#if submission.formErrors && submission.formErrors.length > 0}
+    {#if submission.formErrors.length > 0}
       <div class="form-errors">
         {#each submission.formErrors as error, index (index)}
           <span class="error">{error}</span>

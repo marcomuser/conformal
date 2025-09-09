@@ -1,38 +1,23 @@
-# sv
+# Conformal SvelteKit Example
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Type-safe form submissions with SvelteKit form actions.
 
-## Creating a project
+## 🚀 Try it on StackBlitz
 
-If you're seeing this, you've probably already done this step. Congrats!
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/marcomuser/conformal/tree/main/examples/svelte?embed=1&theme=dark&preset=node&file=src/routes/+page.svelte)
 
-```sh
-# create a new project in the current directory
-npx sv create
+## Local Development
 
-# create a new project in my-app
-npx sv create my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```sh
+```bash
+npm install
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
 
-## Building
+## What This Shows
 
-To create a production version of your app:
+- **Conformal + Zod** for type-safe form validation
+- **SvelteKit form actions** for server-side form processing
+- **Field-level errors** with form preservation
+- **Submission pattern** with success/error states
 
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+Try submitting empty fields or invalid data to see validation in action!

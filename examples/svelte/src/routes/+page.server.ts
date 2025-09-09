@@ -11,8 +11,21 @@ const schema = z.object({
 
 type FormSubmission = Submission<z.infer<typeof schema>>;
 
-export const actions: Actions<FormSubmission> = {
-  default: async ({ request }) => {
+export const load: PageServerLoad = async () => {
+  const initialSubmission: FormSubmission = {
+    status: "idle",
+    input: {},
+    fieldErrors: {},
+    formErrors: [],
+  };
+
+  return {
+    submission: initialSubmission,
+  };
+};
+
+export const actions: Actions = {
+  default: async ({ request }): Promise<FormSubmission> => {
     const formData = await request.formData();
     const submission = parseWithSchema(schema, formData).submission();
 
@@ -23,19 +36,7 @@ export const actions: Actions<FormSubmission> = {
     // Simulate saving to database
     console.log("Saving to database:", submission.value);
 
-    return submission;
+    // Reset form on successful submission
+    return { ...submission, input: {} };
   },
-};
-
-export const load: PageServerLoad = async () => {
-  const defaultSubmission: FormSubmission = {
-    status: "idle",
-    input: {},
-    fieldErrors: {},
-    formErrors: [],
-  };
-
-  return {
-    submission: defaultSubmission,
-  };
 };

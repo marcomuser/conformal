@@ -9,22 +9,14 @@
   <title>Conformal + SvelteKit Example</title>
 </svelte:head>
 
-<main>
-  {@render children?.()}
-</main>
+{@render children?.()}
 
 <style>
   :global(body) {
+    font-family: system-ui, sans-serif;
+    line-height: 1.6;
     margin: 0;
-    padding: 0;
-    background-color: #f5f5f5;
-    min-height: 100vh;
-  }
-
-  main {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    padding: 2rem;
+    background: #f8f9fa;
   }
 </style>

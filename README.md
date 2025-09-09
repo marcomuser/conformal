@@ -34,9 +34,9 @@ npm install conformal
 
 ## Live Examples
 
-- **React** - Form actions with useActionState: [StackBlitz](https://stackblitz.com/github/marcomuser/conformal/tree/main/examples/react) | [Source](https://github.com/marcomuser/conformal/tree/main/examples/react)
+- **React** - Form actions with useActionState: [StackBlitz](https://stackblitz.com/github/marcomuser/conformal/tree/main/examples/react?embed=1&theme=dark&preset=node&file=src/Form.tsx) | [Source](https://github.com/marcomuser/conformal/tree/main/examples/react)
 
-- **SvelteKit** - Server-side form actions: [StackBlitz](https://stackblitz.com/github/marcomuser/conformal/tree/main/examples/svelte) | [Source](https://github.com/marcomuser/conformal/tree/main/examples/svelte)
+- **SvelteKit** - Server-side form actions: [StackBlitz](https://stackblitz.com/github/marcomuser/conformal/tree/main/examples/svelte?embed=1&theme=dark&preset=node&file=src/routes/%2Bpage.server.ts) | [Source](https://github.com/marcomuser/conformal/tree/main/examples/svelte)
 
 ## Usage
 

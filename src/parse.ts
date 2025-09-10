@@ -22,7 +22,7 @@ import type { AnyRecord, InputValue, SchemaResult } from "./types.js";
  * // Returns { name: 'John Doe', age: '30', hobbies: ['Music', 'Coding'] }
  * ```
  */
-export function parse<FormValues extends AnyRecord = UnknownRecord>(
+export function parse<FormValues = UnknownRecord>(
   formData: FormData,
 ): InputValue<FormValues> {
   let formValues: AnyRecord = {};
@@ -79,7 +79,7 @@ export function parseWithSchema<T extends StandardSchemaV1>(
   schema: T,
   formData: FormData,
 ): SchemaResult<T> {
-  const input = parse(formData);
+  const input = parse<StandardSchemaV1.InferOutput<T>>(formData);
   const result = schema["~standard"].validate(input);
 
   if (result instanceof Promise) {

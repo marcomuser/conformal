@@ -1,9 +1,9 @@
 import type { StandardSchemaV1 } from "@standard-schema/spec";
 import type { InputValue, Submission } from "./types.js";
-import type { PartialDeep, UnknownRecord } from "type-fest";
+import type { PartialDeep } from "type-fest";
 
 export function toSubmission<Output>(
-  input: UnknownRecord,
+  input: InputValue<Output>,
   result: StandardSchemaV1.Result<Output>,
 ): Submission<Output> {
   const { formErrors, fieldErrors } = getFormErrors(result.issues);
@@ -12,14 +12,14 @@ export function toSubmission<Output>(
     ? {
         status: "error",
         value: undefined,
-        input: input as PartialDeep<InputValue<Output>>,
+        input: input as PartialDeep<typeof input>,
         formErrors,
         fieldErrors,
       }
     : {
         status: "success",
         value: result.value,
-        input: input as PartialDeep<InputValue<Output>>,
+        input: input as PartialDeep<typeof input>,
         formErrors,
         fieldErrors,
       };

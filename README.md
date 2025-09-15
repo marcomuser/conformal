@@ -240,16 +240,16 @@ type Paths = PathsFromObject<UserForm>;
 
 Conformal provides optional Zod utilities that are **thin preprocessing wrappers** around Zod schemas. They automatically handle form input patterns (empty strings, type coercion, boolean detection) while maintaining **100% Zod compatibility**.
 
-**Zero learning curve** - use them exactly like regular Zod schemas with all methods (`.optional()`, `.array()`, `.min()`, etc.). Import from `conformal/zod` to keep your bundle lean if you don't use Zod.
+**Zero learning curve** - use them exactly like regular Zod schemas with all methods (`.optional()`, `.min()`, `.max()` etc.). Import from `conformal/zod` to keep your bundle lean if you don't use Zod.
 
 ```typescript
-import * as z from "zod";
 import * as zf from "conformal/zod";
 
-const formSchema = z.object({
+const formSchema = zf.object({
   name: zf.string().optional(),
   email: zf.email(),
   age: zf.number().min(13, "Must be at least 13 years old"),
+  hobbies: zf.array(zf.string()),
   birthDate: zf.date(),
   acceptTerms: zf.boolean(),
   profilePicture: zf.file(),

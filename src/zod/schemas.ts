@@ -61,7 +61,7 @@ export function date(params?: Parameters<typeof z.date>[0]) {
       return undefined;
     }
     const date = new Date(v);
-    return isNaN(date.getTime()) ? v : date;
+    return Number.isNaN(date.getTime()) ? v : date;
   }, z.date(params));
 }
 

@@ -135,7 +135,9 @@ describe("zod schemas preprocessing", () => {
       const schema = zf.date();
       const result = schema.safeParse("not-a-date");
       expect(result.success).toBe(false);
-      expect(result.data).toBeUndefined();
+      expect(result.error?.issues[0].message).toBe(
+        "Invalid input: expected date, received string",
+      );
     });
   });
 

@@ -1,5 +1,15 @@
 # conformal
 
+## 1.4.0
+
+### Minor Changes
+
+- [#25](https://github.com/marcomuser/conformal/pull/25) [`22a44cb`](https://github.com/marcomuser/conformal/commit/22a44cb1cb7e7e24be5d87dce4ff88b247f1caa0) Thanks [@marcomuser](https://github.com/marcomuser)! - Enhance zod field schemas with array support and improved error handling
+  - Add `zf.array()` with FormData-friendly preprocessing for multiselect/multicheckbox handling (single values become single-item arrays, multiple values stay arrays, empty strings become empty arrays)
+  - Improve `zf.bigint()` with try-catch for graceful error handling to avoid runtime exceptions
+  - Improve `zf.date()` with invalid date detection
+  - Export `zf.object()` for convenient access alongside other zod field schemas
+
 ## 1.3.1
 
 ### Patch Changes

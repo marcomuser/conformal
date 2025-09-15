@@ -60,7 +60,7 @@ export function date(params?: Parameters<typeof z.date>[0]) {
   }, z.date(params));
 }
 
-export function enum_<T extends readonly [string, ...string[]]>(
+export function enum_<const T extends readonly string[]>(
   values: T,
   params?: Parameters<typeof z.enum>[1],
 ) {
@@ -112,4 +112,26 @@ export function url(params?: Parameters<typeof z.url>[0]) {
     }
     return v;
   }, z.url(params));
+}
+
+export const object = z.object;
+
+export function array<T extends z.core.SomeType>(
+  element: T,
+  params?: Parameters<typeof z.array>[1],
+) {
+  return z.preprocess(
+    (v) => {
+      if (Array.isArray(v)) {
+        return v;
+      }
+
+      if (v === "") {
+        return [];
+      }
+
+      return [v];
+    },
+    z.array(element, params),
+  );
 }

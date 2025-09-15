@@ -8,4 +8,6 @@ export {
   file,
   url,
   email,
+  array,
+  object,
 } from "./schemas.js";

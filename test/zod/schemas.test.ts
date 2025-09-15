@@ -130,6 +130,15 @@ describe("zod schemas preprocessing", () => {
         expect(result.data.getFullYear()).toBe(2023);
       }
     });
+
+    it("should handle invalid date strings gracefully", () => {
+      const schema = zf.date();
+      const result = schema.safeParse("not-a-date");
+      expect(result.success).toBe(false);
+      expect(result.error?.issues[0].message).toBe(
+        "Invalid input: expected date, received string",
+      );
+    });
   });
 
   describe("file", () => {
@@ -264,6 +273,51 @@ describe("zod schemas preprocessing", () => {
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.data).toBe(123n);
+      }
+    });
+
+    it("should handle invalid bigint strings gracefully", () => {
+      const schema = zf.bigint();
+      const result = schema.safeParse("abc");
+      expect(result.success).toBe(false);
+      expect(result.data).toBeUndefined();
+    });
+  });
+
+  describe("array", () => {
+    it("should return empty array for empty strings", () => {
+      const schema = zf.array(zf.string());
+      const result = schema.safeParse("");
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toEqual([]);
+      }
+    });
+
+    it("should pass through arrays unchanged", () => {
+      const schema = zf.array(zf.string());
+      const result = schema.safeParse(["a", "b", "c"]);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toEqual(["a", "b", "c"]);
+      }
+    });
+
+    it("should convert single values to single-item arrays", () => {
+      const schema = zf.array(zf.string());
+      const result = schema.safeParse("hello");
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toEqual(["hello"]);
+      }
+    });
+
+    it("should validate array elements", () => {
+      const schema = zf.array(zf.number());
+      const result = schema.safeParse(["123", "456"]);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toEqual([123, 456]);
       }
     });
   });

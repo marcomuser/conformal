@@ -267,4 +267,42 @@ describe("zod schemas preprocessing", () => {
       }
     });
   });
+
+  describe("array", () => {
+    it("should return empty array for empty strings", () => {
+      const schema = zf.array(zf.string());
+      const result = schema.safeParse("");
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toEqual([]);
+      }
+    });
+
+    it("should pass through arrays unchanged", () => {
+      const schema = zf.array(zf.string());
+      const result = schema.safeParse(["a", "b", "c"]);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toEqual(["a", "b", "c"]);
+      }
+    });
+
+    it("should convert single values to single-item arrays", () => {
+      const schema = zf.array(zf.string());
+      const result = schema.safeParse("hello");
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toEqual(["hello"]);
+      }
+    });
+
+    it("should validate array elements", () => {
+      const schema = zf.array(zf.number());
+      const result = schema.safeParse(["123", "456"]);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toEqual([123, 456]);
+      }
+    });
+  });
 });

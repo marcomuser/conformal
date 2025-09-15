@@ -32,7 +32,11 @@ export function bigint(params?: Parameters<typeof z.bigint>[0]) {
     if (v.trim() === "") {
       return undefined;
     }
-    return BigInt(v);
+    try {
+      return BigInt(v);
+    } catch {
+      return v;
+    }
   }, z.bigint(params));
 }
 
@@ -56,7 +60,8 @@ export function date(params?: Parameters<typeof z.date>[0]) {
     if (v === "") {
       return undefined;
     }
-    return new Date(v);
+    const date = new Date(v);
+    return isNaN(date.getTime()) ? v : date;
   }, z.date(params));
 }
 
@@ -125,11 +130,9 @@ export function array<T extends z.core.SomeType>(
       if (Array.isArray(v)) {
         return v;
       }
-
       if (v === "") {
         return [];
       }
-
       return [v];
     },
     z.array(element, params),

@@ -130,6 +130,13 @@ describe("zod schemas preprocessing", () => {
         expect(result.data.getFullYear()).toBe(2023);
       }
     });
+
+    it("should handle invalid date strings gracefully", () => {
+      const schema = zf.date();
+      const result = schema.safeParse("not-a-date");
+      expect(result.success).toBe(false);
+      expect(result.data).toBeUndefined();
+    });
   });
 
   describe("file", () => {
@@ -265,6 +272,13 @@ describe("zod schemas preprocessing", () => {
       if (result.success) {
         expect(result.data).toBe(123n);
       }
+    });
+
+    it("should handle invalid bigint strings gracefully", () => {
+      const schema = zf.bigint();
+      const result = schema.safeParse("abc");
+      expect(result.success).toBe(false);
+      expect(result.data).toBeUndefined();
     });
   });
 

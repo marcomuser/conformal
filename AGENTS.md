@@ -19,7 +19,7 @@ cd examples/svelte && npm i && npm run dev
 
 ## Public API
 
-- `conformal`: `getPath`, `setPath`, `parse`, `parseWithSchema`, `serialize`; types: `PathsFromObject`, `Submission`
+- `conformal`: `getPath`, `setPath`, `decode`, `parseWithSchema`, `serialize`; types: `PathsFromObject`, `Submission`
 - `conformal/zod`: `string`, `number`, `boolean`, `date`, `bigint`, `enum`, `file`, `url`, `email`
 
 Exports live in `src/index.ts` and `src/zod/index.ts`.

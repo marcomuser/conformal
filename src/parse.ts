@@ -1,41 +1,7 @@
 import type { StandardSchemaV1 } from "@standard-schema/spec";
-import type { UnknownRecord } from "type-fest";
-import { setPath } from "./path.js";
+import { decode } from "./decode.js";
 import { toSubmission } from "./submission.js";
-import type { AnyRecord, InputValue, SchemaResult } from "./types.js";
-
-/**
- * Parses a `FormData` object into a structured object with typed values.
- *
- * @param formData A `FormData` object.
- * @returns An object representing the form data, with types derived from the `FormValues` generic.
- *
- * @example
- * ```ts
- * const formData = new FormData();
- * formData.append('name', 'John Doe');
- * formData.append('age', '30');
- * formData.append('hobbies', 'Music');
- * formData.append('hobbies', 'Coding');
- *
- * parse<{ name: string; age: string; hobbies: string[] }>(formData);
- * // Returns { name: 'John Doe', age: '30', hobbies: ['Music', 'Coding'] }
- * ```
- */
-export function parse<FormValues = UnknownRecord>(
-  formData: FormData,
-): InputValue<FormValues> {
-  let formValues: AnyRecord = {};
-  const keys = new Set(formData.keys());
-
-  for (const key of keys) {
-    const allVal = formData.getAll(key);
-    const val = allVal.length > 1 ? allVal : allVal.at(0);
-    formValues = setPath(formValues, key, val);
-  }
-
-  return formValues as InputValue<FormValues>;
-}
+import type { SchemaResult } from "./types.js";
 
 /**
  * Parses a `FormData` object into a structured object with typed values and validates it against a schema.
@@ -79,7 +45,7 @@ export function parseWithSchema<T extends StandardSchemaV1>(
   schema: T,
   formData: FormData,
 ): SchemaResult<T> {
-  const input = parse<StandardSchemaV1.InferOutput<T>>(formData);
+  const input = decode<StandardSchemaV1.InferOutput<T>>(formData);
   const result = schema["~standard"].validate(input);
 
   if (result instanceof Promise) {

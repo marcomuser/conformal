@@ -16,7 +16,7 @@ Works everywhere: In browsers, Node.js, and edge runtimes with React, Vue, Svelt
 - [Usage](#usage)
   - [parseWithSchema](#parsewithschema)
   - [Submission](#submission)
-  - [parse](#parse)
+  - [decode](#decode)
   - [serialize](#serialize)
   - [getPath](#getpath)
   - [setPath](#setpath)
@@ -42,7 +42,7 @@ npm install conformal
 
 ### parseWithSchema
 
-The `parseWithSchema` function parses and validates [FormData](https://developer.mozilla.org/docs/Web/API/FormData) against a [Standard Schema](https://standardschema.dev). It internally uses the [parse](#parse) function to first convert the `FormData` into a structured object before applying schema validation.
+The `parseWithSchema` function parses and validates [FormData](https://developer.mozilla.org/docs/Web/API/FormData) against a [Standard Schema](https://standardschema.dev). It internally uses the [decode](#decode) function to first convert the `FormData` into a structured object before applying schema validation.
 
 **🚀 Try it yourself**: This example includes an import map and can be run directly in a browser!
 
@@ -143,12 +143,12 @@ The `Submission` type represents the result of form validation and provides a cl
 - **Granular Error Handling**: Separate field and form-level errors for precise UI feedback
 - **Immutable**: All properties are read-only, preventing accidental mutations
 
-### parse
+### decode
 
-The `parse` function allows you to convert a `FormData` object into a structured object with typed values. It supports both dot notation for nested objects and square bracket notation for arrays. You can mix dot and square bracket notation to create complex structures. The `parse` function allows you to create your own schema validator in cases where `parseWithSchema` does not support your use case.
+The `decode` function allows you to convert a `FormData` object into a structured object with typed values. It supports both dot notation for nested objects and square bracket notation for arrays. You can mix dot and square bracket notation to create complex structures. The `decode` function allows you to create your own schema validator in cases where `parseWithSchema` does not support your use case.
 
 ```typescript
-import { parse } from "conformal";
+import { decode } from "conformal";
 
 const formData = new FormData();
 formData.append("user.name", "John Doe");
@@ -158,7 +158,7 @@ formData.append("user.contacts[0].value", "john.doe@example.com");
 formData.append("user.contacts[1].type", "phone");
 formData.append("user.contacts[1].value", "123-456-7890");
 
-const result = parse<{
+const result = decode<{
   user: {
     name: string;
     age: string;
@@ -208,7 +208,7 @@ const value = getPath({ a: { b: { c: ["hey", "Hi!"] } } }, "a.b.c[1]");
 
 ### setPath
 
-Set a value in an object using a path. The `setPath` function is used internally by the `parse` function and provides powerful object manipulation capabilities. **Note**: Creates copies only where needed to preserve immutability, avoiding unnecessary deep copying for better performance.
+Set a value in an object using a path. The `setPath` function is used internally by the `decode` function and provides powerful object manipulation capabilities. **Note**: Creates copies only where needed to preserve immutability, avoiding unnecessary deep copying for better performance.
 
 ```typescript
 import { setPath } from "conformal";

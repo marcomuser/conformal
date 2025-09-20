@@ -4,40 +4,21 @@ import { toSubmission } from "./submission.js";
 import type { SchemaResult } from "./types.js";
 
 /**
- * Parses a `FormData` object into a structured object with typed values and validates it against a schema.
+ * Parses and validates FormData against a schema.
  *
- * @param schema A schema object that implements the Standard Schema specification.
- * @param formData A `FormData` object to parse and validate.
- * @returns A `SchemaResult` object that extends the standard schema validation result with a `submission()` method.
- *          The `submission()` method returns a `Submission` object that provides a consistent interface for handling
- *          both successful and failed validation results.
+ * @param schema A Standard Schema object.
+ * @param formData FormData to parse and validate.
+ * @returns A Standard Schema Result with a `submission()` method.
  *
  * @example
  * ```ts
- * import * as z from 'zod';
- *
- * const schema = z.object({
- *   name: z.string(),
- *   age: z.coerce.number(),
- *   hobbies: z.string().array(),
- * });
- *
- * const formData = new FormData();
- * formData.append('name', 'John Doe');
- * formData.append('age', '30');
- * formData.append('hobbies', 'Music');
- * formData.append('hobbies', 'Coding');
- *
  * const result = parseFormData(schema, formData);
  * const submission = result.submission();
  *
  * if (submission.status === 'success') {
- *   console.log(submission.value); // { name: 'John Doe', age: 30, hobbies: ['Music', 'Coding'] }
- *   console.log(submission.input); // Raw parsed form data
+ *   console.log(submission.value); // Validated data
  * } else {
- *   console.log(submission.fieldErrors); // Field-specific validation errors
- *   console.log(submission.formErrors); // Form-level validation errors
- *   console.log(submission.input); // Raw parsed form data
+ *   console.log(submission.fieldErrors); // Validation errors
  * }
  * ```
  */

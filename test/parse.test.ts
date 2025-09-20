@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { z } from "zod";
-import { parseWithSchema } from "../src/parse.js";
+import { parseFormData } from "../src/parse.js";
 
-describe("parseWithSchema", () => {
+describe("parseFormData", () => {
   it("should return success result when validation passes", () => {
     const schema = z.object({
       name: z.string(),
@@ -16,7 +16,7 @@ describe("parseWithSchema", () => {
     formData.append("hobbies", "Music");
     formData.append("hobbies", "Coding");
 
-    const result = parseWithSchema(schema, formData);
+    const result = parseFormData(schema, formData);
     const submission = result.submission();
 
     expect(submission.status).toBe("success");
@@ -39,7 +39,7 @@ describe("parseWithSchema", () => {
     formData.append("age", "not-a-number");
     formData.append("email", "invalid-email");
 
-    const result = parseWithSchema(schema, formData);
+    const result = parseFormData(schema, formData);
     const submission = result.submission();
 
     expect(submission.status).toBe("error");
@@ -62,7 +62,7 @@ describe("parseWithSchema", () => {
     formData.append("user.profile.name", "Jane");
     formData.append("user.profile.age", "25");
 
-    const result = parseWithSchema(schema, formData);
+    const result = parseFormData(schema, formData);
     const submission = result.submission();
 
     expect(submission.status).toBe("success");
@@ -88,10 +88,10 @@ describe("parseWithSchema", () => {
     formData.append("name", "test");
 
     expect(() => {
-      parseWithSchema(asyncSchema as any, formData);
+      parseFormData(asyncSchema as any, formData);
     }).toThrow(TypeError);
     expect(() => {
-      parseWithSchema(asyncSchema as any, formData);
+      parseFormData(asyncSchema as any, formData);
     }).toThrow("Schema validation must be synchronous");
   });
 
@@ -105,7 +105,7 @@ describe("parseWithSchema", () => {
     formData.append("items", "banana");
     formData.append("items", "cherry");
 
-    const result = parseWithSchema(schema, formData);
+    const result = parseFormData(schema, formData);
     const submission = result.submission();
 
     expect(submission.status).toBe("success");
@@ -123,7 +123,7 @@ describe("parseWithSchema", () => {
     formData.append("items", "ok"); // Too short
     formData.append("items", "valid");
 
-    const result = parseWithSchema(schema, formData);
+    const result = parseFormData(schema, formData);
     const submission = result.submission();
 
     expect(submission.status).toBe("error");
@@ -142,7 +142,7 @@ describe("parseWithSchema", () => {
     formData.append("name", "John Doe");
     formData.append("age", "30");
 
-    const result = parseWithSchema(schema, formData);
+    const result = parseFormData(schema, formData);
     const submission = result.submission();
 
     expect(submission.status).toBe("success");
@@ -168,7 +168,7 @@ describe("parseWithSchema", () => {
     formData.append("name", "Jo"); // Too short
     formData.append("age", "16"); // Too young
 
-    const result = parseWithSchema(schema, formData);
+    const result = parseFormData(schema, formData);
     const submission = result.submission();
 
     expect(submission.status).toBe("error");

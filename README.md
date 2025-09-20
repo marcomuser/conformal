@@ -14,7 +14,7 @@ Works everywhere: In browsers, Node.js, and edge runtimes with React, Vue, Svelt
 - [Installation](#installation)
 - [Live Examples](#live-examples)
 - [Usage](#usage)
-  - [parseWithSchema](#parsewithschema)
+  - [parseFormData](#parseformdata)
   - [Submission](#submission)
   - [decode](#decode)
   - [serialize](#serialize)
@@ -40,9 +40,9 @@ npm install conformal
 
 ## Usage
 
-### parseWithSchema
+### parseFormData
 
-The `parseWithSchema` function parses and validates [FormData](https://developer.mozilla.org/docs/Web/API/FormData) against a [Standard Schema](https://standardschema.dev). It internally uses the [decode](#decode) function to first convert the `FormData` into a structured object before applying schema validation.
+The `parseFormData` function parses and validates [FormData](https://developer.mozilla.org/docs/Web/API/FormData) against a [Standard Schema](https://standardschema.dev). It internally uses the [decode](#decode) function to first convert the `FormData` into a structured object before applying schema validation.
 
 **🚀 Try it yourself**: This example includes an import map and can be run directly in a browser!
 
@@ -66,7 +66,7 @@ The `parseWithSchema` function parses and validates [FormData](https://developer
   </script>
 
   <script type="module">
-    import { parseWithSchema } from "conformal";
+    import { parseFormData } from "conformal";
     import * as z from "zod";
 
     const schema = z.object({
@@ -80,7 +80,7 @@ The `parseWithSchema` function parses and validates [FormData](https://developer
       event.preventDefault();
 
       const formData = new FormData(form);
-      const submission = parseWithSchema(schema, formData).submission();
+      const submission = parseFormData(schema, formData).submission();
 
       if (submission.status === "success") {
         console.log(submission.value); // Successful result value
@@ -105,10 +105,10 @@ const value = {
 };
 ```
 
-The `parseWithSchema` function returns a `SchemaResult` object that extends the standard schema validation result with a `submission()` method. This method provides a consistent `Submission` object that makes it easy to handle both successful and failed validation results:
+The `parseFormData` function returns a `SchemaResult` object that extends the standard schema validation result with a `submission()` method. This method provides a consistent `Submission` object that makes it easy to handle both successful and failed validation results:
 
 ```typescript
-const submission = parseWithSchema(schema, formData).submission();
+const submission = parseFormData(schema, formData).submission();
 
 if (submission.status === "success") {
   // Access validated data
@@ -126,7 +126,7 @@ if (submission.status === "success") {
 
 ### Submission
 
-The `Submission` type represents the result of form validation and provides a clean interface for handling both successful and failed validation results. This is the type that the `submission()` method returns from `parseWithSchema`.
+The `Submission` type represents the result of form validation and provides a clean interface for handling both successful and failed validation results. This is the type that the `submission()` method returns from `parseFormData`.
 
 **Properties:**
 
@@ -145,7 +145,7 @@ The `Submission` type represents the result of form validation and provides a cl
 
 ### decode
 
-The `decode` function allows you to convert a `FormData` object into a structured object with typed values. It supports both dot notation for nested objects and square bracket notation for arrays. You can mix dot and square bracket notation to create complex structures. The `decode` function allows you to create your own schema validator in cases where `parseWithSchema` does not support your use case.
+The `decode` function allows you to convert a `FormData` object into a structured object with typed values. It supports both dot notation for nested objects and square bracket notation for arrays. You can mix dot and square bracket notation to create complex structures. The `decode` function allows you to create your own schema validator in cases where `parseFormData` does not support your use case.
 
 ```typescript
 import { decode } from "conformal";

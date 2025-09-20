@@ -28,7 +28,7 @@ import type { SchemaResult } from "./types.js";
  * formData.append('hobbies', 'Music');
  * formData.append('hobbies', 'Coding');
  *
- * const result = parseWithSchema(schema, formData);
+ * const result = parseFormData(schema, formData);
  * const submission = result.submission();
  *
  * if (submission.status === 'success') {
@@ -41,7 +41,7 @@ import type { SchemaResult } from "./types.js";
  * }
  * ```
  */
-export function parseWithSchema<T extends StandardSchemaV1>(
+export function parseFormData<T extends StandardSchemaV1>(
   schema: T,
   formData: FormData,
 ): SchemaResult<T> {

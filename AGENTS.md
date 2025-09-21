@@ -20,7 +20,7 @@ cd examples/svelte && npm i && npm run dev
 ## Public API
 
 - `conformal`: `getPath`, `setPath`, `decode`, `parseFormData`, `serialize`; types: `PathsFromObject`, `Submission`
-- `conformal/zod`: `string`, `number`, `boolean`, `date`, `bigint`, `enum`, `file`, `url`, `email`
+- `conformal/zod`: `string`, `number`, `boolean`, `date`, `bigint`, `enum`, `file`, `url`, `email`, `object`, `array`
 
 Exports live in `src/index.ts` and `src/zod/index.ts`.
 
@@ -43,7 +43,7 @@ Exports live in `src/index.ts` and `src/zod/index.ts`.
 
 ```bash
 # Fast local CI
-npm run format:check && npm run typecheck && npm run test && npm run build
+npm run format:check && npm run typecheck && npm run test
 
 # Focus tests
 npx vitest run -t "<name>"      # by test name

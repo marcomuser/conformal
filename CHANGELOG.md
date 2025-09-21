@@ -1,5 +1,16 @@
 # conformal
 
+## 2.0.0
+
+### Major Changes
+
+- [#29](https://github.com/marcomuser/conformal/pull/29) [`cc831d5`](https://github.com/marcomuser/conformal/commit/cc831d546af61cb1f5e8160afebace780e9ee50f) Thanks [@marcomuser](https://github.com/marcomuser)! - ## Breaking Changes
+  - **Rename `parse` to `decode`**: The `parse` function has been renamed to `decode` to better reflect its purpose of decoding FormData into structured objects. This is a pure data transformation function with no validation.
+  - **Rename `parseWithSchema` to `parseFormData`**: The `parseWithSchema` function has been renamed to `parseFormData` to be more specific about its input type and purpose. This function parses and validates FormData against a schema.
+
+- [#29](https://github.com/marcomuser/conformal/pull/29) [`cc831d5`](https://github.com/marcomuser/conformal/commit/cc831d546af61cb1f5e8160afebace780e9ee50f) Thanks [@marcomuser](https://github.com/marcomuser)! - ## Breaking Changes
+  - **Upgrade type-fest to v5**: This release upgrades to type-fest v5, which requires TypeScript 5.9+ and Node.js v20+. Users will need to upgrade their TypeScript and Node.js versions to continue using this library.
+
 ## 1.4.0
 
 ### Minor Changes

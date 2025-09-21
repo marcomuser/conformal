@@ -1,11 +1,11 @@
 import { useActionState } from "react";
-import { parseWithSchema, serialize, type Submission } from "conformal";
+import { parseFormData, serialize, type Submission } from "conformal";
 import * as z from "zod";
 import * as zf from "conformal/zod";
 import "./Form.css";
 
 type SchemaValues = z.infer<typeof schema>;
-const schema = z.object({
+const schema = zf.object({
   name: zf.string(),
   age: zf.number(),
   acceptTerms: zf.boolean(),
@@ -15,7 +15,7 @@ async function submitAction(
   lastSubmission: Submission<SchemaValues>,
   formData: FormData,
 ): Promise<Submission<SchemaValues>> {
-  const submission = parseWithSchema(schema, formData).submission();
+  const submission = parseFormData(schema, formData).submission();
 
   if (submission.status !== "success") {
     return submission;

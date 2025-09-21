@@ -1,9 +1,9 @@
-import { parseWithSchema, type Submission } from "conformal";
+import { parseFormData, type Submission } from "conformal";
 import * as z from "zod";
 import * as zf from "conformal/zod";
 import type { Actions, PageServerLoad } from "./$types";
 
-const schema = z.object({
+const schema = zf.object({
   name: zf.string(),
   age: zf.number(),
   acceptTerms: zf.boolean(),
@@ -27,7 +27,7 @@ export const load: PageServerLoad = async () => {
 export const actions: Actions = {
   default: async ({ request }): Promise<FormSubmission> => {
     const formData = await request.formData();
-    const submission = parseWithSchema(schema, formData).submission();
+    const submission = parseFormData(schema, formData).submission();
 
     if (submission.status !== "success") {
       return submission;

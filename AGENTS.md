@@ -19,14 +19,14 @@ cd examples/svelte && npm i && npm run dev
 
 ## Public API
 
-- `conformal`: `getPath`, `setPath`, `parse`, `parseWithSchema`, `serialize`; types: `PathsFromObject`, `Submission`
-- `conformal/zod`: `string`, `number`, `boolean`, `date`, `bigint`, `enum`, `file`, `url`, `email`
+- `conformal`: `getPath`, `setPath`, `decode`, `parseFormData`, `serialize`; types: `PathsFromObject`, `Submission`
+- `conformal/zod`: `string`, `number`, `boolean`, `date`, `bigint`, `enum`, `file`, `url`, `email`, `object`, `array`
 
 Exports live in `src/index.ts` and `src/zod/index.ts`.
 
 ## Non‑negotiable invariants
 
-- `parseWithSchema` is synchronous; throw `TypeError("Schema validation must be synchronous")` if schema returns a Promise.
+- `parseFormData` is synchronous; throw `TypeError("Schema validation must be synchronous")` if schema returns a Promise.
 - `setPath`/`getPath` are immutable and prototype‑safe (block `__proto__`, `constructor.prototype`); support nested arrays/objects and sparse indices.
 - `Submission` always includes `input`; separate `fieldErrors` (dot/bracket paths, numeric indices in brackets) from `formErrors`.
 - `serialize`: number/bigint → `.toString()`, boolean → `"on"`/`""` (configurable), `Date` → ISO via `.toISOString()`.
@@ -43,7 +43,7 @@ Exports live in `src/index.ts` and `src/zod/index.ts`.
 
 ```bash
 # Fast local CI
-npm run format:check && npm run typecheck && npm run test && npm run build
+npm run format:check && npm run typecheck && npm run test
 
 # Focus tests
 npx vitest run -t "<name>"      # by test name

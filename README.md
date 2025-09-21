@@ -2,7 +2,7 @@
 
 > Type-safe form submissions for the modern web.
 
-Conformal helps you work with native [`FormData`](https://developer.mozilla.org/docs/Web/API/FormData) the way frameworks are moving: directly. It solves two major pain points:
+Conformal helps you work with native [`FormData`](https://developer.mozilla.org/docs/Web/API/FormData). It solves two major pain points:
 
 - ✅ **Strongly typed FormData parsing** – Turn native `FormData` into real objects with full TypeScript inference (nested objects and arrays with dot/bracket notation).
 - ✅ **Canonical submission flow** – A single `Submission` object that preserves raw input, separates field vs. form errors, and standardizes the success/error states.
@@ -11,18 +11,48 @@ Works everywhere: In browsers, Node.js, and edge runtimes with React, Vue, Svelt
 
 ### Table of Contents
 
-- [Installation](#installation)
+- [Getting Started](#getting-started)
 - [Live Examples](#live-examples)
 - [API Reference](#api-reference)
 - [License](#license)
 
-## Installation
+## Getting Started
 
 Install Conformal via npm or the package manager of your choice:
 
 ```bash
 npm install conformal
 ```
+
+Here's a quick example showing how Conformal handles form validation with a user registration form:
+
+```typescript
+import { parseFormData } from "conformal";
+import * as z from "zod"; // Tip: Use conformal/zod for automatic form input preprocessing
+
+const schema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.email("Invalid email address"),
+  age: z.coerce.number().min(18, "Must be at least 18 years old"),
+  acceptTerms: z.coerce.boolean(),
+});
+
+// In your form action or handler
+const result = parseFormData(schema, formData);
+const submission = result.submission();
+
+if (submission.status === "success") {
+  // submission.value is fully typed: { name: string, email: string, age: number, acceptTerms: boolean }
+  console.log("User registered:", submission.value);
+} else {
+  // submission.fieldErrors contains validation errors: { email: ["Invalid email address"] }
+  console.log("Validation errors:", submission.fieldErrors);
+  // submission.input preserves the raw user input for re-display
+  console.log("User input:", submission.input);
+}
+```
+
+That's it! Conformal automatically handles FormData parsing, type coercion, and provides a clean submission interface.
 
 ## Live Examples
 
@@ -42,12 +72,12 @@ npm install conformal
 
 ### Types
 
-- **[`Submission`](src/README.md#submission)** - Standardized validation result with success/error states
+- **[`Submission`](src/README.md#submission)** - Standardized submission result with success/error states
 - **[`PathsFromObject`](src/README.md#pathsfromobject)** - Type utility to extract all possible object paths
 
 ### Zod Utilities
 
-- **[Zod Field Schemas](src/zod/README.md)** - Zod schemas with automatic form input preprocessing
+- **[Zod Field Schemas](src/zod/README.md#field-schemas)** - Zod schemas with automatic form input preprocessing
 
 ## License
 

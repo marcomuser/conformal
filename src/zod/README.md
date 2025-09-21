@@ -1,8 +1,10 @@
 # Zod Utilities
 
+The Zod Utilities are provided under the `conformal/zod` subpath. Zod is an optional peer dependency, so you can freely choose another Standard Schema library if you prefer without depending on Zod.
+
 ## Field Schemas
 
-Conformal's field schemas are preprocessing wrappers that handle common form input patterns automatically. They convert empty strings to `undefined`, coerce string inputs to appropriate types (numbers, dates, booleans), and handle file uploads. They're fully compatible with Zod and can be mixed with regular Zod schemas.
+Conformal's field schemas are preprocessing wrappers that handle common form input patterns automatically. They convert empty strings to `undefined`, coerce string inputs to appropriate types (numbers, dates, booleans), and handle `File` objects. They're fully compatible with Zod and can be mixed with regular Zod schemas.
 
 ```typescript
 import * as zf from "conformal/zod";

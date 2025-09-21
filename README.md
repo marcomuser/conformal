@@ -34,20 +34,20 @@ npm install conformal
 
 ### Core Functions
 
-- **[`parseFormData`](src/README.md#parseformdata)** - Parse and validate FormData
-- **[`decode`](src/README.md#decode)** - Convert FormData to objects
-- **[`serialize`](src/README.md#serialize)** - Convert values to compatible format for field default values
-- **[`getPath`](src/README.md#getpath)** - Access nested object values
-- **[`setPath`](src/README.md#setpath)** - Set nested object values
+- **[`parseFormData`](src/README.md#parseformdata)** - Parse FormData with schema validation and get Submission object
+- **[`decode`](src/README.md#decode)** - Convert FormData to structured objects (no validation)
+- **[`serialize`](src/README.md#serialize)** - Transform typed values back to form-compatible strings
+- **[`getPath`](src/README.md#getpath)** - Safely access nested values using dot/bracket notation
+- **[`setPath`](src/README.md#setpath)** - Immutably set nested values using dot/bracket notation
 
 ### Types
 
-- **[`Submission`](src/README.md#submission)** - Validation result type
-- **[`PathsFromObject`](src/README.md#pathsfromobject)** - Extract paths from types
+- **[`Submission`](src/README.md#submission)** - Standardized validation result with success/error states
+- **[`PathsFromObject`](src/README.md#pathsfromobject)** - Type utility to extract all possible object paths
 
 ### Zod Utilities
 
-- **[Zod Field Schemas](src/zod/README.md)** - Pre-configured Zod schemas for forms
+- **[Zod Field Schemas](src/zod/README.md)** - Zod schemas with automatic form input preprocessing
 
 ## License
 

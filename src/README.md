@@ -1,5 +1,17 @@
 # Core API
 
+### Table of Contents
+
+- [Functions](#functions)
+  - [parseFormData](#parseformdata)
+  - [decode](#decode)
+  - [serialize](#serialize)
+  - [getPath](#getpath)
+  - [setPath](#setpath)
+- [Types](#types)
+  - [Submission](#submission)
+  - [PathsFromObject](#pathsfromobject)
+
 ## Functions
 
 ### parseFormData

@@ -39,4 +39,4 @@ jobs:
           commit: "[ci] release"
           title: "[ci] release"
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_CONFORMAL }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

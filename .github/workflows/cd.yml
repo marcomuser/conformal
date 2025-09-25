@@ -10,16 +10,17 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    if: ${{ github.repository_owner == 'marcomuser' }}
+    if: ${{ github.repository == 'marcomuser/conformal' }}
     permissions:
       contents: write
       pull-requests: write
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "22.x"
-          cache: "npm"
+          cache: ""
+          package-manager-cache: false
 
       - name: Install Dependencies
         run: npm ci

@@ -1,5 +1,7 @@
 # Zod Utilities
 
+> ⚠️ **Experimental**: These utilities are still in development and may change.
+
 The Zod Utilities are provided under the `conformal/zod` subpath. Zod is an optional peer dependency, so you can freely choose another Standard Schema library if you prefer without depending on Zod.
 
 ## Field Schemas
@@ -12,7 +14,7 @@ import * as zf from "conformal/zod";
 const formSchema = zf.object({
   name: zf.string().optional(),
   email: zf.email(),
-  age: zf.number().min(13, "Must be at least 13 years old"),
+  age: zf.number(),
   hobbies: zf.array(zf.string()),
   birthDate: zf.date(),
   acceptTerms: zf.boolean(),

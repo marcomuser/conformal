@@ -157,38 +157,6 @@ describe("valibot schemas preprocessing", () => {
       expect(result.success).toBe(false);
       expect(result.output).toBe("d");
     });
-
-    it("should work with number picklist values", () => {
-      const schema = vf.picklist([1, 2, 3]);
-      const result = v.safeParse(schema, "2");
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.output).toBe(2);
-      }
-    });
-
-    it("should handle invalid number picklist values", () => {
-      const schema = vf.picklist([1, 2, 3]);
-      const result = v.safeParse(schema, "4");
-      expect(result.success).toBe(false);
-      expect(result.output).toBe(4);
-    });
-
-    it("should work with bigint picklist values", () => {
-      const schema = vf.picklist([1n, 2n, 3n]);
-      const result = v.safeParse(schema, "2");
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.output).toBe(2n);
-      }
-    });
-
-    it("should handle invalid bigint picklist values", () => {
-      const schema = vf.picklist([1n, 2n, 3n]);
-      const result = v.safeParse(schema, "4");
-      expect(result.success).toBe(false);
-      expect(result.output).toBe(4n);
-    });
   });
 
   describe("bigint", () => {

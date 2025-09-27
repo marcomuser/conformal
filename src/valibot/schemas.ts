@@ -94,45 +94,16 @@ export function date<
 }
 
 export function picklist<
-  const TOptions extends
-    | readonly string[]
-    | readonly number[]
-    | readonly bigint[],
+  const TOptions extends string[] | Readonly<string[]>,
   const TMessage extends
-    | v.ErrorMessage<
-        v.PicklistIssue | v.StringIssue | v.NumberIssue | v.BigintIssue
-      >
+    | v.ErrorMessage<v.StringIssue | v.PicklistIssue>
     | undefined,
 >(options: TOptions, message?: TMessage) {
   return v.pipe(
-    v.string(),
+    v.string(message),
     v.transform((input) => {
-      const isString = options.some((opt) => typeof opt === "string");
-      const isNumber = options.some((opt) => typeof opt === "number");
-      const isBigInt = options.some((opt) => typeof opt === "bigint");
-
-      if (isString) {
-        if (input === "") {
-          return undefined;
-        }
-        return input;
-      }
-      if (isNumber) {
-        if (input.trim() === "") {
-          return undefined;
-        }
-        return Number(input);
-      }
-
-      if (isBigInt) {
-        if (input.trim() === "") {
-          return undefined;
-        }
-        try {
-          return BigInt(input);
-        } catch {
-          return input;
-        }
+      if (input === "") {
+        return undefined;
       }
       return input;
     }),

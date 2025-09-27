@@ -51,12 +51,17 @@
     "@types/node": "^24.5.2",
     "prettier": "^3.6.2",
     "typescript": "^5.9.2",
+    "valibot": "^1.1.0",
     "vitest": "^3.2.4"
   },
   "peerDependencies": {
+    "valibot": "^1.1.0",
     "zod": "^4.0.0"
   },
   "peerDependenciesMeta": {
+    "valibot": {
+      "optional": true
+    },
     "zod": {
       "optional": true
     }

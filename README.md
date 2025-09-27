@@ -77,6 +77,8 @@ That's it! Conformal automatically handles FormData parsing, type coercion, and 
 
 ### Zod Utilities
 
+> ⚠️ **Experimental**: These utilities are still in development and may change.
+
 - **[Zod Field Schemas](src/zod/README.md#field-schemas)** - Zod schemas with automatic form input preprocessing
 
 ## License

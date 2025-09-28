@@ -1,5 +1,38 @@
 # conformal
 
+## 2.1.0
+
+### Minor Changes
+
+- [#35](https://github.com/marcomuser/conformal/pull/35) [`3224bd7`](https://github.com/marcomuser/conformal/commit/3224bd71d94dd0841adb4002be73377bead4e8e7) Thanks [@marcomuser](https://github.com/marcomuser)! - Add coerce functions
+  - Add `coerceString`, `coerceNumber`, `coerceBigint`, `coerceBoolean`, `coerceDate`, `coerceFile`, `coerceArray` functions
+  - These utilities help convert form input values to their expected types
+  - Essential for building custom schema implementations (like zod preproccessors or valibot transforms)
+
+- [#35](https://github.com/marcomuser/conformal/pull/35) [`3224bd7`](https://github.com/marcomuser/conformal/commit/3224bd71d94dd0841adb4002be73377bead4e8e7) Thanks [@marcomuser](https://github.com/marcomuser)! - Deprecate zod utilities
+  - Mark `conformal/zod` utilities as deprecated
+  - Zod's `z.preprocess` returns a `ZodPipe` which doesn't allow method chaining, making these utilities less useful than expected
+  - Zod utilities will be removed in the next major release
+  - Users can migrate to using z.preprocess with the new coerce functions directly:
+
+  ```typescript
+  import * as z from "zod";
+  import { coerceNumber } from "conformal";
+
+  z.preprocess(coerceNumber, z.number().min(5));
+  ```
+
+- [#35](https://github.com/marcomuser/conformal/pull/35) [`3224bd7`](https://github.com/marcomuser/conformal/commit/3224bd71d94dd0841adb4002be73377bead4e8e7) Thanks [@marcomuser](https://github.com/marcomuser)! - Add valibot schemas
+  - Add `conformal/valibot` subpath with valibot utilities
+  - Provides `string`, `number`, `boolean`, `date`, `bigint`, `picklist`, `file`, `array` schemas
+  - Uses conformal's coerce functions for automatic form input preprocessing
+  - Fully compatible with valibot and can be mixed with regular valibot schemas
+  - Marked as experimental - API may change
+
+### Patch Changes
+
+- [#35](https://github.com/marcomuser/conformal/pull/35) [`3224bd7`](https://github.com/marcomuser/conformal/commit/3224bd71d94dd0841adb4002be73377bead4e8e7) Thanks [@marcomuser](https://github.com/marcomuser)! - Align serialize false boolean behavior with coerceBoolean
+
 ## 2.0.0
 
 ### Major Changes

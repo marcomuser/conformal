@@ -47,7 +47,7 @@ describe("coerce functions", () => {
       expect(coerceNumber("-10")).toBe(-10);
     });
 
-    it("should return original string for invalid bigint strings", () => {
+    it("should return original string for invalid number strings", () => {
       expect(coerceNumber("abc")).toBe("abc");
       expect(coerceNumber("12.34.56")).toBe("12.34.56");
     });

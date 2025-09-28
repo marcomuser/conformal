@@ -69,16 +69,7 @@ That's it! Conformal automatically handles FormData parsing, type coercion, and 
 - **[`serialize`](src/README.md#serialize)** - Transform typed values back to form-compatible strings
 - **[`getPath`](src/README.md#getpath)** - Safely access nested values using dot/bracket notation
 - **[`setPath`](src/README.md#setpath)** - Immutably set nested values using dot/bracket notation
-
-### Coerce Functions
-
-- **[`coerceString`](src/README.md#coercestring)** - String handling
-- **[`coerceFile`](src/README.md#coercefile)** - File handling
-- **[`coerceNumber`](src/README.md#coercenumber)** - String to number coercion
-- **[`coerceBigint`](src/README.md#coercebigint)** - String to BigInt coercion
-- **[`coerceBoolean`](src/README.md#coerceboolean)** - String to boolean coercion
-- **[`coerceDate`](src/README.md#coercedate)** - String to Date coercion
-- **[`coerceArray`](src/README.md#coercearray)** - Coerce to array
+- **[`coerceX`](src/README.md#coerce-functions)** - A set of coercion functions for building custom schemas
 
 ### Types
 

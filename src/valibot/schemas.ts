@@ -4,8 +4,12 @@ export function string<
   const TMessage extends v.ErrorMessage<v.StringIssue> | undefined,
 >(message?: TMessage) {
   return v.pipe(
-    v.string(message),
+    v.unknown(),
     v.transform((input) => {
+      if (typeof input !== "string") {
+        return input;
+      }
+
       if (input === "") {
         return undefined;
       }
@@ -16,13 +20,14 @@ export function string<
 }
 
 export function number<
-  const TMessage extends
-    | v.ErrorMessage<v.StringIssue | v.NumberIssue>
-    | undefined,
+  const TMessage extends v.ErrorMessage<v.NumberIssue> | undefined,
 >(message?: TMessage) {
   return v.pipe(
-    v.string(message),
+    v.unknown(),
     v.transform((input) => {
+      if (typeof input !== "string") {
+        return input;
+      }
       if (input.trim() === "") {
         return undefined;
       }
@@ -33,13 +38,14 @@ export function number<
 }
 
 export function bigint<
-  const TMessage extends
-    | v.ErrorMessage<v.StringIssue | v.BigintIssue>
-    | undefined,
+  const TMessage extends v.ErrorMessage<v.BigintIssue> | undefined,
 >(message?: TMessage) {
   return v.pipe(
-    v.string(message),
+    v.unknown(),
     v.transform((input) => {
+      if (typeof input !== "string") {
+        return input;
+      }
       if (input.trim() === "") {
         return undefined;
       }
@@ -54,13 +60,14 @@ export function bigint<
 }
 
 export function boolean<
-  const TMessage extends
-    | v.ErrorMessage<v.StringIssue | v.BooleanIssue>
-    | undefined,
+  const TMessage extends v.ErrorMessage<v.BooleanIssue> | undefined,
 >(message?: TMessage) {
   return v.pipe(
-    v.string(message),
+    v.unknown(),
     v.transform((input) => {
+      if (typeof input !== "string") {
+        return input;
+      }
       if (input === "") {
         return undefined;
       }
@@ -76,13 +83,14 @@ export function boolean<
 }
 
 export function date<
-  const TMessage extends
-    | v.ErrorMessage<v.StringIssue | v.DateIssue>
-    | undefined,
+  const TMessage extends v.ErrorMessage<v.DateIssue> | undefined,
 >(message?: TMessage) {
   return v.pipe(
-    v.string(message),
+    v.unknown(),
     v.transform((input) => {
+      if (typeof input !== "string") {
+        return input;
+      }
       if (input === "") {
         return undefined;
       }
@@ -95,13 +103,14 @@ export function date<
 
 export function picklist<
   const TOptions extends string[] | Readonly<string[]>,
-  const TMessage extends
-    | v.ErrorMessage<v.StringIssue | v.PicklistIssue>
-    | undefined,
+  const TMessage extends v.ErrorMessage<v.PicklistIssue> | undefined,
 >(options: TOptions, message?: TMessage) {
   return v.pipe(
-    v.string(message),
+    v.unknown(),
     v.transform((input) => {
+      if (typeof input !== "string") {
+        return input;
+      }
       if (input === "") {
         return undefined;
       }
@@ -115,8 +124,11 @@ export function file<
   const TMessage extends v.ErrorMessage<v.FileIssue> | undefined,
 >(message?: TMessage) {
   return v.pipe(
-    v.file(message),
+    v.unknown(),
     v.transform((input) => {
+      if (!(input instanceof File)) {
+        return input;
+      }
       if (input.size === 0) {
         return undefined;
       }

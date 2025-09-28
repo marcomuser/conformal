@@ -11,6 +11,13 @@ describe("valibot schemas preprocessing", () => {
       expect(result.output).toBeUndefined();
     });
 
+    it("should pass through non-string values unchanged", () => {
+      const schema = vf.string();
+      const result = v.safeParse(schema, 123);
+      expect(result.success).toBe(false);
+      expect(result.output).toBe(123);
+    });
+
     it("should return non-empty strings as-is", () => {
       const schema = vf.string();
       const result = v.safeParse(schema, "hello");
@@ -36,6 +43,15 @@ describe("valibot schemas preprocessing", () => {
       expect(result.output).toBeUndefined();
     });
 
+    it("should pass through non-string values unchanged", () => {
+      const schema = vf.number();
+      const result = v.safeParse(schema, 42);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.output).toBe(42);
+      }
+    });
+
     it("should convert string numbers to numbers", () => {
       const schema = vf.number();
       const result = v.safeParse(schema, "123");
@@ -59,6 +75,15 @@ describe("valibot schemas preprocessing", () => {
       const result = v.safeParse(schema, "");
       expect(result.success).toBe(false);
       expect(result.output).toBeUndefined();
+    });
+
+    it("should pass through non-string values unchanged", () => {
+      const schema = vf.boolean();
+      const result = v.safeParse(schema, true);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.output).toBe(true);
+      }
     });
 
     it("should return true for truthy string values", () => {
@@ -96,6 +121,16 @@ describe("valibot schemas preprocessing", () => {
       expect(result.output).toBeUndefined();
     });
 
+    it("should pass through non-string values unchanged", () => {
+      const schema = vf.date();
+      const date = new Date();
+      const result = v.safeParse(schema, date);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.output).toBe(date);
+      }
+    });
+
     it("should convert string dates to Date objects", () => {
       const schema = vf.date();
       const result = v.safeParse(schema, "2023-01-01");
@@ -123,6 +158,13 @@ describe("valibot schemas preprocessing", () => {
       expect(result.output).toBeUndefined();
     });
 
+    it("should pass through non-File values unchanged", () => {
+      const schema = vf.file();
+      const result = v.safeParse(schema, "not-a-file");
+      expect(result.success).toBe(false);
+      expect(result.output).toBe("not-a-file");
+    });
+
     it("should return valid files as-is", () => {
       const schema = vf.file();
       const file = new File(["content"], "test.txt");
@@ -140,6 +182,13 @@ describe("valibot schemas preprocessing", () => {
       const result = v.safeParse(schema, "");
       expect(result.success).toBe(false);
       expect(result.output).toBeUndefined();
+    });
+
+    it("should pass through non-string values unchanged", () => {
+      const schema = vf.picklist(["a", "b", "c"]);
+      const result = v.safeParse(schema, 123);
+      expect(result.success).toBe(false);
+      expect(result.output).toBe(123);
     });
 
     it("should return valid picklist values as-is", () => {
@@ -172,6 +221,15 @@ describe("valibot schemas preprocessing", () => {
       const result = v.safeParse(schema, " ");
       expect(result.success).toBe(false);
       expect(result.output).toBeUndefined();
+    });
+
+    it("should pass through non-string values unchanged", () => {
+      const schema = vf.bigint();
+      const result = v.safeParse(schema, 42n);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.output).toBe(42n);
+      }
     });
 
     it("should convert string numbers to bigint", () => {

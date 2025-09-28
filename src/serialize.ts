@@ -6,6 +6,11 @@ export interface SerializeOptions {
    * @default "on"
    */
   booleanTrueValue?: "true" | "on" | "1" | "yes";
+
+  /** The string value to use for boolean `false`.
+   * @default "off"
+   */
+  booleanFalseValue?: "false" | "off" | "0" | "no";
 }
 
 /**
@@ -21,6 +26,7 @@ export interface SerializeOptions {
  * ```ts
  * serialize(123); // Returns "123"
  * serialize(true); // Returns "on"
+ * serialize(false); // Returns "off"
  * serialize(new Date()) // Returns "2025-01-17T17:04:25.059Z"
  * serialize({username: "test", age: 100}) // Returns {username: "test", age: "100"}
  * ```
@@ -29,7 +35,7 @@ export function serialize<T>(
   value: T,
   options: SerializeOptions = {},
 ): InputValue<T> {
-  const { booleanTrueValue = "on" } = options;
+  const { booleanTrueValue = "on", booleanFalseValue = "off" } = options;
 
   if (Array.isArray(value)) {
     return value.map((item) => serialize(item, options)) as InputValue<T>;
@@ -50,7 +56,7 @@ export function serialize<T>(
   }
 
   if (typeof value === "boolean") {
-    return (value ? booleanTrueValue : "") as InputValue<T>;
+    return (value ? booleanTrueValue : booleanFalseValue) as InputValue<T>;
   }
 
   if (value instanceof Date) {

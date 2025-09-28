@@ -1,6 +1,6 @@
 {
   "name": "conformal",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Type-safe form submissions for the modern web.",
   "keywords": [
     "formdata",

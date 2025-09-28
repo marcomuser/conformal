@@ -62,7 +62,7 @@ That's it! Conformal automatically handles FormData parsing, type coercion, and 
 
 ## API Reference
 
-### Core Functions
+### Functions
 
 - **[`parseFormData`](src/README.md#parseformdata)** - Parse FormData with schema validation and get Submission object
 - **[`decode`](src/README.md#decode)** - Convert FormData to structured objects (no validation)

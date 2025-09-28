@@ -1,6 +1,5 @@
 import { describe, it, expect } from "vitest";
 import * as zf from "../../src/zod/schemas.js";
-import * as z from "zod";
 
 describe("zod schemas integration", () => {
   describe("string", () => {
@@ -14,8 +13,8 @@ describe("zod schemas integration", () => {
     });
 
     it("should handle validation errors", () => {
-      const schema = z.string().min(5);
-      const result = schema.safeParse("hi");
+      const schema = zf.string();
+      const result = schema.safeParse(true);
       expect(result.success).toBe(false);
     });
 
@@ -37,8 +36,8 @@ describe("zod schemas integration", () => {
     });
 
     it("should handle validation errors", () => {
-      const schema = z.number().min(10);
-      const result = schema.safeParse(5);
+      const schema = zf.number();
+      const result = schema.safeParse("hello");
       expect(result.success).toBe(false);
     });
 
@@ -63,8 +62,8 @@ describe("zod schemas integration", () => {
     });
 
     it("should handle validation errors", () => {
-      const schema = z.bigint().min(10n);
-      const result = schema.safeParse(5n);
+      const schema = zf.bigint();
+      const result = schema.safeParse("hello");
       expect(result.success).toBe(false);
     });
 

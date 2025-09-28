@@ -28,7 +28,7 @@ Here's a quick example showing how Conformal handles form validation with a user
 
 ```typescript
 import { parseFormData } from "conformal";
-import * as z from "zod"; // Tip: Use conformal/zod for automatic form input preprocessing
+import * as z from "zod"; // Tip: Use conformal's coerce functions for form input preprocessing
 
 const schema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -70,16 +70,26 @@ That's it! Conformal automatically handles FormData parsing, type coercion, and 
 - **[`getPath`](src/README.md#getpath)** - Safely access nested values using dot/bracket notation
 - **[`setPath`](src/README.md#setpath)** - Immutably set nested values using dot/bracket notation
 
+### Coerce Functions
+
+- **[`coerceString`](src/README.md#coercestring)** - String handling
+- **[`coerceFile`](src/README.md#coercefile)** - File handling
+- **[`coerceNumber`](src/README.md#coercenumber)** - String to number coercion
+- **[`coerceBigint`](src/README.md#coercebigint)** - String to BigInt coercion
+- **[`coerceBoolean`](src/README.md#coerceboolean)** - String to boolean coercion
+- **[`coerceDate`](src/README.md#coercedate)** - String to Date coercion
+- **[`coerceArray`](src/README.md#coercearray)** - Coerce to array
+
 ### Types
 
 - **[`Submission`](src/README.md#submission)** - Standardized submission result with success/error states
 - **[`PathsFromObject`](src/README.md#pathsfromobject)** - Type utility to extract all possible object paths
 
-### Zod Utilities
+### Valibot Utilities
 
 > ⚠️ **Experimental**: These utilities are still in development and may change.
 
-- **[Zod Field Schemas](src/zod/README.md#field-schemas)** - Zod schemas with automatic form input preprocessing
+- **[Valibot Field Schemas](src/valibot/README.md#field-schemas)** - Valibot schemas with automatic form input preprocessing
 
 ## License
 

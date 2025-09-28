@@ -1,140 +1,91 @@
 import * as z from "zod";
+import {
+  coerceString,
+  coerceNumber,
+  coerceBigint,
+  coerceBoolean,
+  coerceDate,
+  coerceFile,
+  coerceArray,
+} from "../coerce.js";
 
+/**
+ * @deprecated The Zod utilities will be removed in the next major release.
+ */
 export function string(params?: Parameters<typeof z.string>[0]) {
-  return z.preprocess((v) => {
-    if (typeof v !== "string") {
-      return v;
-    }
-    if (v === "") {
-      return undefined;
-    }
-    return v;
-  }, z.string(params));
+  return z.preprocess(coerceString, z.string(params));
 }
 
+/**
+ * @deprecated The Zod utilities will be removed in the next major release.
+ */
 export function number(params?: Parameters<typeof z.number>[0]) {
-  return z.preprocess((v) => {
-    if (typeof v !== "string") {
-      return v;
-    }
-    if (v.trim() === "") {
-      return undefined;
-    }
-    return Number(v);
-  }, z.number(params));
+  return z.preprocess(coerceNumber, z.number(params));
 }
 
+/**
+ * @deprecated The Zod utilities will be removed in the next major release.
+ */
 export function bigint(params?: Parameters<typeof z.bigint>[0]) {
-  return z.preprocess((v) => {
-    if (typeof v !== "string") {
-      return v;
-    }
-    if (v.trim() === "") {
-      return undefined;
-    }
-    try {
-      return BigInt(v);
-    } catch {
-      return v;
-    }
-  }, z.bigint(params));
+  return z.preprocess(coerceBigint, z.bigint(params));
 }
 
+/**
+ * @deprecated The Zod utilities will be removed in the next major release.
+ */
 export function boolean(params?: Parameters<typeof z.boolean>[0]) {
-  return z.preprocess((v) => {
-    if (typeof v !== "string") {
-      return v;
-    }
-    if (v === "") {
-      return undefined;
-    }
-    return v === "true" || v === "on" || v === "1" || v === "yes" ? true : v;
-  }, z.boolean(params));
+  return z.preprocess(coerceBoolean, z.boolean(params));
 }
 
+/**
+ * @deprecated The Zod utilities will be removed in the next major release.
+ */
 export function date(params?: Parameters<typeof z.date>[0]) {
-  return z.preprocess((v) => {
-    if (typeof v !== "string") {
-      return v;
-    }
-    if (v === "") {
-      return undefined;
-    }
-    const date = new Date(v);
-    return Number.isNaN(date.getTime()) ? v : date;
-  }, z.date(params));
+  return z.preprocess(coerceDate, z.date(params));
 }
 
+/**
+ * @deprecated The Zod utilities will be removed in the next major release.
+ */
 export function enum_<const T extends readonly string[]>(
   values: T,
   params?: Parameters<typeof z.enum>[1],
 ) {
-  return z.preprocess(
-    (v) => {
-      if (typeof v !== "string") {
-        return v;
-      }
-      if (v === "") {
-        return undefined;
-      }
-      return v;
-    },
-    z.enum(values, params),
-  );
+  return z.preprocess(coerceString, z.enum(values, params));
 }
 
+/**
+ * @deprecated The Zod utilities will be removed in the next major release.
+ */
 export function file(params?: Parameters<typeof z.file>[0]) {
-  return z.preprocess((v) => {
-    if (!(v instanceof File)) {
-      return v;
-    }
-    if (v.size === 0) {
-      return undefined;
-    }
-    return v;
-  }, z.file(params));
+  return z.preprocess(coerceFile, z.file(params));
 }
 
+/**
+ * @deprecated The Zod utilities will be removed in the next major release.
+ */
 export function email(params?: Parameters<typeof z.email>[0]) {
-  return z.preprocess((v) => {
-    if (typeof v !== "string") {
-      return v;
-    }
-    if (v === "") {
-      return undefined;
-    }
-    return v;
-  }, z.email(params));
+  return z.preprocess(coerceString, z.email(params));
 }
 
+/**
+ * @deprecated The Zod utilities will be removed in the next major release.
+ */
 export function url(params?: Parameters<typeof z.url>[0]) {
-  return z.preprocess((v) => {
-    if (typeof v !== "string") {
-      return v;
-    }
-    if (v === "") {
-      return undefined;
-    }
-    return v;
-  }, z.url(params));
+  return z.preprocess(coerceString, z.url(params));
 }
 
+/**
+ * @deprecated The Zod utilities will be removed in the next major release.
+ */
 export const object = z.object;
 
+/**
+ * @deprecated The Zod utilities will be removed in the next major release.
+ */
 export function array<T extends z.core.SomeType>(
   element: T,
   params?: Parameters<typeof z.array>[1],
 ) {
-  return z.preprocess(
-    (v) => {
-      if (Array.isArray(v)) {
-        return v;
-      }
-      if (v === "") {
-        return [];
-      }
-      return [v];
-    },
-    z.array(element, params),
-  );
+  return z.preprocess(coerceArray, z.array(element, params));
 }

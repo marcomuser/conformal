@@ -10,12 +10,15 @@ describe("serialize", () => {
 
   it("serializes booleans to strings", () => {
     expect(serialize(true)).toBe("on");
-    expect(serialize(false)).toBe("");
+    expect(serialize(false)).toBe("off");
   });
 
   it("serializes booleans with custom true value", () => {
     expect(serialize(true, { booleanTrueValue: "yes" })).toBe("yes");
-    expect(serialize(false, { booleanTrueValue: "yes" })).toBe("");
+  });
+
+  it("serializes booleans with custom false value", () => {
+    expect(serialize(false, { booleanFalseValue: "no" })).toBe("no");
   });
 
   it("serializes dates to ISO strings", () => {
@@ -28,39 +31,51 @@ describe("serialize", () => {
       a: 1,
       b: "hello",
       c: true,
-      d: new Date("2024-02-20T10:00:00.000Z"),
+      d: false,
+      e: new Date("2024-02-20T10:00:00.000Z"),
     };
     expect(serialize(obj)).toEqual({
       a: "1",
       b: "hello",
       c: "on",
-      d: "2024-02-20T10:00:00.000Z",
+      d: "off",
+      e: "2024-02-20T10:00:00.000Z",
     });
   });
 
   it("serializes nested objects", () => {
-    const obj = { a: { b: 1, c: { d: "test" } } };
-    expect(serialize(obj)).toEqual({ a: { b: "1", c: { d: "test" } } });
+    const obj = { a: { b: 1, c: { d: "test", e: true, f: false } } };
+    expect(serialize(obj)).toEqual({
+      a: {
+        b: "1",
+        c: {
+          d: "test",
+          e: "on",
+          f: "off",
+        },
+      },
+    });
   });
 
   it("serializes arrays", () => {
-    const arr = [1, "test", false, new Date("2024-03-15T15:30:00.000Z")];
+    const arr = [1, "test", true, false, new Date("2024-03-15T15:30:00.000Z")];
     expect(serialize(arr)).toEqual([
       "1",
       "test",
-      "",
+      "on",
+      "off",
       "2024-03-15T15:30:00.000Z",
     ]);
   });
 
   it("serializes nested arrays and objects", () => {
     const data = {
-      a: [1, { b: true, c: new Date("2024-10-10") }],
-      d: { e: [2, 3] },
+      a: [1, { b: true, c: false, d: new Date("2024-10-10") }],
+      e: { f: [2, 3], g: true, h: false },
     };
     expect(serialize(data)).toEqual({
-      a: ["1", { b: "on", c: "2024-10-10T00:00:00.000Z" }],
-      d: { e: ["2", "3"] },
+      a: ["1", { b: "on", c: "off", d: "2024-10-10T00:00:00.000Z" }],
+      e: { f: ["2", "3"], g: "on", h: "off" },
     });
   });
 

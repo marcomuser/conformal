@@ -2,17 +2,25 @@
 
 ### Table of Contents
 
-- [Functions](#functions)
+- [Core Functions](#core-functions)
   - [parseFormData](#parseformdata)
   - [decode](#decode)
   - [serialize](#serialize)
   - [getPath](#getpath)
   - [setPath](#setpath)
+- [Coerce Functions](#coerce-functions)
+  - [coerceString](#coercestring)
+  - [coerceNumber](#coercenumber)
+  - [coerceBigint](#coercebigint)
+  - [coerceBoolean](#coerceboolean)
+  - [coerceDate](#coercedate)
+  - [coerceFile](#coercefile)
+  - [coerceArray](#coercearray)
 - [Types](#types)
   - [Submission](#submission)
   - [PathsFromObject](#pathsfromobject)
 
-## Functions
+## Core Functions
 
 ### parseFormData
 
@@ -105,6 +113,107 @@ import { setPath } from "conformal";
 
 const newObj = setPath({ a: { b: { c: [] } } }, "a.b.c[1]", "hey");
 // Returns { a: { b: { c: [<empty>, 'hey'] } } }
+```
+
+## Coerce Functions
+
+The coerce functions provide utilities for converting form input values to their expected types. These functions are essential for building custom schema implementations (like zod or valibot schemas) where you need to transform string-based form data into proper JavaScript types before validation. All coerce functions handle empty strings by returning `undefined` and pass through non-matching types unchanged, making them safe to use in schema transformation pipelines.
+
+### coerceString
+
+Converts string input to a string value, returning `undefined` for empty strings.
+
+```typescript
+import { coerceString } from "conformal";
+
+console.log(coerceString("hello")); // "hello"
+console.log(coerceString("")); // undefined
+console.log(coerceString(123)); // 123 (unchanged)
+```
+
+### coerceNumber
+
+Converts string input to a number, returning `undefined` for empty or whitespace-only strings.
+
+```typescript
+import { coerceNumber } from "conformal";
+
+console.log(coerceNumber("42")); // 42
+console.log(coerceNumber("3.14")); // 3.14
+console.log(coerceNumber("")); // undefined
+console.log(coerceNumber(" ")); // undefined
+console.log(coerceNumber("abc")); // NaN
+```
+
+### coerceBigint
+
+Converts string input to a BigInt, returning `undefined` for empty or whitespace-only strings. Returns the original string if conversion fails.
+
+```typescript
+import { coerceBigint } from "conformal";
+
+console.log(coerceBigint("42")); // 42n
+console.log(coerceBigint("9007199254740991")); // 9007199254740991n
+console.log(coerceBigint("")); // undefined
+console.log(coerceBigint("abc")); // "abc" (unchanged)
+```
+
+### coerceBoolean
+
+Converts string input to a boolean based on common truthy/falsy string values.
+
+```typescript
+import { coerceBoolean } from "conformal";
+
+console.log(coerceBoolean("true")); // true
+console.log(coerceBoolean("on")); // true
+console.log(coerceBoolean("1")); // true
+console.log(coerceBoolean("yes")); // true
+console.log(coerceBoolean("false")); // false
+console.log(coerceBoolean("off")); // false
+console.log(coerceBoolean("0")); // false
+console.log(coerceBoolean("no")); // false
+console.log(coerceBoolean("")); // undefined
+console.log(coerceBoolean("maybe")); // "maybe" (unchanged)
+```
+
+### coerceDate
+
+Converts string input to a Date object, returning `undefined` for empty strings. Returns the original string if the date is invalid.
+
+```typescript
+import { coerceDate } from "conformal";
+
+console.log(coerceDate("2023-01-01")); // Date object
+console.log(coerceDate("")); // undefined
+console.log(coerceDate("invalid-date")); // "invalid-date" (unchanged)
+```
+
+### coerceFile
+
+Handles File objects, returning `undefined` for empty files (size 0).
+
+```typescript
+import { coerceFile } from "conformal";
+
+const emptyFile = new File([], "test.txt");
+const file = new File(["content"], "test.txt");
+
+console.log(coerceFile(emptyFile)); // undefined
+console.log(coerceFile(file)); // File object
+console.log(coerceFile("not-a-file")); // "not-a-file" (unchanged)
+```
+
+### coerceArray
+
+Converts any input to an array. Empty strings become empty arrays, arrays pass through unchanged, and other values are wrapped in an array.
+
+```typescript
+import { coerceArray } from "conformal";
+
+console.log(coerceArray("")); // []
+console.log(coerceArray([1, 2, 3])); // [1, 2, 3]
+console.log(coerceArray("hello")); // ["hello"]
 ```
 
 ## Types

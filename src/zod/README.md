@@ -1,6 +1,6 @@
 # Zod Utilities
 
-> ⚠️ **Experimental**: These utilities are still in development and may change.
+> ⚠️ **Deprecated**: These utilities are deprecated and will be removed in the next major release.
 
 The Zod Utilities are provided under the `conformal/zod` subpath. Zod is an optional peer dependency, so you can freely choose another Standard Schema library if you prefer without depending on Zod.
 

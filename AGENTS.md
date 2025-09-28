@@ -20,7 +20,7 @@ cd examples/svelte && npm i && npm run dev
 ## Public API
 
 - `conformal`: `getPath`, `setPath`, `decode`, `parseFormData`, `serialize`, `coerceString`, `coerceNumber`, `coerceBigint`, `coerceBoolean`, `coerceDate`, `coerceFile`, `coerceArray`; types: `PathsFromObject`, `Submission`
-- `conformal/valibot`: `string`, `number`, `boolean`, `date`, `bigint`, `enum`, `file`, `url`, `email`, `object`, `array` (experimental)
+- `conformal/valibot`: `string`, `number`, `boolean`, `date`, `bigint`, `picklist`, `file`, `array` (experimental)
 - `conformal/zod`: `string`, `number`, `boolean`, `date`, `bigint`, `enum`, `file`, `url`, `email`, `object`, `array` (deprecated)
 
 Exports live in `src/index.ts`, `src/valibot/index.ts`, and `src/zod/index.ts`.

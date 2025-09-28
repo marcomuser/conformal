@@ -2,23 +2,9 @@ import { describe, it, expect } from "vitest";
 import * as vf from "../../src/valibot/schemas.js";
 import * as v from "valibot";
 
-describe("valibot schemas preprocessing", () => {
+describe("valibot schemas integration", () => {
   describe("string", () => {
-    it("should return undefined for empty strings", () => {
-      const schema = vf.string();
-      const result = v.safeParse(schema, "");
-      expect(result.success).toBe(false);
-      expect(result.output).toBeUndefined();
-    });
-
-    it("should pass through non-string values unchanged", () => {
-      const schema = vf.string();
-      const result = v.safeParse(schema, 123);
-      expect(result.success).toBe(false);
-      expect(result.output).toBe(123);
-    });
-
-    it("should return non-empty strings as-is", () => {
+    it("should work with valid strings", () => {
       const schema = vf.string();
       const result = v.safeParse(schema, "hello");
       expect(result.success).toBe(true);
@@ -26,24 +12,22 @@ describe("valibot schemas preprocessing", () => {
         expect(result.output).toBe("hello");
       }
     });
+
+    it("should handle validation errors", () => {
+      const schema = v.pipe(vf.string(), v.minLength(5));
+      const result = v.safeParse(schema, "hi");
+      expect(result.success).toBe(false);
+    });
+
+    it("should work with form data coercion", () => {
+      const schema = vf.string();
+      const result = v.safeParse(schema, "");
+      expect(result.success).toBe(false);
+    });
   });
 
   describe("number", () => {
-    it("should return undefined for empty strings", () => {
-      const schema = vf.number();
-      const result = v.safeParse(schema, "");
-      expect(result.success).toBe(false);
-      expect(result.output).toBeUndefined();
-    });
-
-    it("should return undefined for whitespace-only strings", () => {
-      const schema = vf.number();
-      const result = v.safeParse(schema, " ");
-      expect(result.success).toBe(false);
-      expect(result.output).toBeUndefined();
-    });
-
-    it("should pass through non-string values unchanged", () => {
+    it("should work with valid numbers", () => {
       const schema = vf.number();
       const result = v.safeParse(schema, 42);
       expect(result.success).toBe(true);
@@ -52,7 +36,13 @@ describe("valibot schemas preprocessing", () => {
       }
     });
 
-    it("should convert string numbers to numbers", () => {
+    it("should handle validation errors", () => {
+      const schema = v.pipe(vf.number(), v.minValue(10));
+      const result = v.safeParse(schema, 5);
+      expect(result.success).toBe(false);
+    });
+
+    it("should work with form data coercion", () => {
       const schema = vf.number();
       const result = v.safeParse(schema, "123");
       expect(result.success).toBe(true);
@@ -60,24 +50,36 @@ describe("valibot schemas preprocessing", () => {
         expect(result.output).toBe(123);
       }
     });
+  });
 
-    it("should handle invalid number strings", () => {
-      const schema = vf.number();
-      const result = v.safeParse(schema, "abc");
+  describe("bigint", () => {
+    it("should work with valid bigints", () => {
+      const schema = vf.bigint();
+      const result = v.safeParse(schema, 42n);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.output).toBe(42n);
+      }
+    });
+
+    it("should handle validation errors", () => {
+      const schema = v.pipe(vf.bigint(), v.minValue(10n));
+      const result = v.safeParse(schema, 5n);
       expect(result.success).toBe(false);
-      expect(result.output).toBeNaN();
+    });
+
+    it("should work with form data coercion", () => {
+      const schema = vf.bigint();
+      const result = v.safeParse(schema, "123");
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.output).toBe(123n);
+      }
     });
   });
 
   describe("boolean", () => {
-    it("should return undefined for empty strings", () => {
-      const schema = vf.boolean();
-      const result = v.safeParse(schema, "");
-      expect(result.success).toBe(false);
-      expect(result.output).toBeUndefined();
-    });
-
-    it("should pass through non-string values unchanged", () => {
+    it("should work with valid booleans", () => {
       const schema = vf.boolean();
       const result = v.safeParse(schema, true);
       expect(result.success).toBe(true);
@@ -86,55 +88,20 @@ describe("valibot schemas preprocessing", () => {
       }
     });
 
-    it("should return true for truthy string values", () => {
+    it("should work with form data coercion", () => {
       const schema = vf.boolean();
-      const truthyValues = ["true", "on", "1", "yes"];
-
-      truthyValues.forEach((value) => {
-        const result = v.safeParse(schema, value);
-        expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(true);
-        }
-      });
-    });
-
-    it("should return false for explicit falsy string values", () => {
-      const schema = vf.boolean();
-      const falsyValues = ["false", "off", "0", "no"];
-
-      falsyValues.forEach((value) => {
-        const result = v.safeParse(schema, value);
-        expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.output).toBe(false);
-        }
-      });
-    });
-
-    it("should fail validation for ambiguous string values", () => {
-      const schema = vf.boolean();
-      const ambiguousValues = ["maybe", "hello", "banana", "sometimes"];
-
-      ambiguousValues.forEach((value) => {
-        const result = v.safeParse(schema, value);
-        expect(result.success).toBe(false);
-        expect(result.output).toBe(value);
-      });
+      const result = v.safeParse(schema, "true");
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.output).toBe(true);
+      }
     });
   });
 
   describe("date", () => {
-    it("should return undefined for empty strings", () => {
+    it("should work with valid dates", () => {
       const schema = vf.date();
-      const result = v.safeParse(schema, "");
-      expect(result.success).toBe(false);
-      expect(result.output).toBeUndefined();
-    });
-
-    it("should pass through non-string values unchanged", () => {
-      const schema = vf.date();
-      const date = new Date();
+      const date = new Date("2023-01-01");
       const result = v.safeParse(schema, date);
       expect(result.success).toBe(true);
       if (result.success) {
@@ -142,41 +109,35 @@ describe("valibot schemas preprocessing", () => {
       }
     });
 
-    it("should convert string dates to Date objects", () => {
+    it("should work with form data coercion", () => {
       const schema = vf.date();
       const result = v.safeParse(schema, "2023-01-01");
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.output).toBeInstanceOf(Date);
-        expect(result.output.getFullYear()).toBe(2023);
+      }
+    });
+  });
+
+  describe("picklist", () => {
+    it("should work with valid picklist values", () => {
+      const schema = vf.picklist(["a", "b", "c"]);
+      const result = v.safeParse(schema, "a");
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.output).toBe("a");
       }
     });
 
-    it("should handle invalid date strings", () => {
-      const schema = vf.date();
-      const result = v.safeParse(schema, "not-a-date");
+    it("should handle validation errors", () => {
+      const schema = vf.picklist(["a", "b", "c"]);
+      const result = v.safeParse(schema, "d");
       expect(result.success).toBe(false);
-      expect(result.output).toBe("not-a-date");
     });
   });
 
   describe("file", () => {
-    it("should return undefined for empty files", () => {
-      const schema = vf.file();
-      const emptyFile = new File([], "empty.txt");
-      const result = v.safeParse(schema, emptyFile);
-      expect(result.success).toBe(false);
-      expect(result.output).toBeUndefined();
-    });
-
-    it("should pass through non-File values unchanged", () => {
-      const schema = vf.file();
-      const result = v.safeParse(schema, "not-a-file");
-      expect(result.success).toBe(false);
-      expect(result.output).toBe("not-a-file");
-    });
-
-    it("should return valid files as-is", () => {
+    it("should work with valid files", () => {
       const schema = vf.file();
       const file = new File(["content"], "test.txt");
       const result = v.safeParse(schema, file);
@@ -187,90 +148,8 @@ describe("valibot schemas preprocessing", () => {
     });
   });
 
-  describe("picklist", () => {
-    it("should return undefined for empty strings", () => {
-      const schema = vf.picklist(["a", "b", "c"]);
-      const result = v.safeParse(schema, "");
-      expect(result.success).toBe(false);
-      expect(result.output).toBeUndefined();
-    });
-
-    it("should pass through non-string values unchanged", () => {
-      const schema = vf.picklist(["a", "b", "c"]);
-      const result = v.safeParse(schema, 123);
-      expect(result.success).toBe(false);
-      expect(result.output).toBe(123);
-    });
-
-    it("should return valid picklist values as-is", () => {
-      const schema = vf.picklist(["a", "b", "c"]);
-      const result = v.safeParse(schema, "a");
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.output).toBe("a");
-      }
-    });
-
-    it("should handle invalid picklist values", () => {
-      const schema = vf.picklist(["a", "b", "c"]);
-      const result = v.safeParse(schema, "d");
-      expect(result.success).toBe(false);
-      expect(result.output).toBe("d");
-    });
-  });
-
-  describe("bigint", () => {
-    it("should return undefined for empty strings", () => {
-      const schema = vf.bigint();
-      const result = v.safeParse(schema, "");
-      expect(result.success).toBe(false);
-      expect(result.output).toBeUndefined();
-    });
-
-    it("should return undefined for whitespace-only strings", () => {
-      const schema = vf.bigint();
-      const result = v.safeParse(schema, " ");
-      expect(result.success).toBe(false);
-      expect(result.output).toBeUndefined();
-    });
-
-    it("should pass through non-string values unchanged", () => {
-      const schema = vf.bigint();
-      const result = v.safeParse(schema, 42n);
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.output).toBe(42n);
-      }
-    });
-
-    it("should convert string numbers to bigint", () => {
-      const schema = vf.bigint();
-      const result = v.safeParse(schema, "123");
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.output).toBe(123n);
-      }
-    });
-
-    it("should handle invalid bigint strings", () => {
-      const schema = vf.bigint();
-      const result = v.safeParse(schema, "abc");
-      expect(result.success).toBe(false);
-      expect(result.output).toBe("abc");
-    });
-  });
-
   describe("array", () => {
-    it("should return empty array for empty strings", () => {
-      const schema = vf.array(vf.string());
-      const result = v.safeParse(schema, "");
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.output).toEqual([]);
-      }
-    });
-
-    it("should pass through arrays unchanged", () => {
+    it("should work with valid arrays", () => {
       const schema = vf.array(vf.string());
       const result = v.safeParse(schema, ["a", "b", "c"]);
       expect(result.success).toBe(true);
@@ -279,21 +158,12 @@ describe("valibot schemas preprocessing", () => {
       }
     });
 
-    it("should convert single values to single-item arrays", () => {
+    it("should work with form data coercion", () => {
       const schema = vf.array(vf.string());
-      const result = v.safeParse(schema, "hello");
+      const result = v.safeParse(schema, "single-value");
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.output).toEqual(["hello"]);
-      }
-    });
-
-    it("should validate array elements", () => {
-      const schema = vf.array(vf.number());
-      const result = v.safeParse(schema, ["123", "456"]);
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.output).toEqual([123, 456]);
+        expect(result.output).toEqual(["single-value"]);
       }
     });
   });

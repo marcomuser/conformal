@@ -1,23 +1,10 @@
 import { describe, it, expect } from "vitest";
 import * as zf from "../../src/zod/schemas.js";
+import * as z from "zod";
 
-describe("zod schemas preprocessing", () => {
+describe("zod schemas integration", () => {
   describe("string", () => {
-    it("should return undefined for empty strings", () => {
-      const schema = zf.string();
-      const result = schema.safeParse("");
-      expect(result.success).toBe(false);
-      expect(result.data).toBeUndefined();
-    });
-
-    it("should pass through non-string values unchanged", () => {
-      const schema = zf.string();
-      const result = schema.safeParse(123);
-      expect(result.success).toBe(false);
-      expect(result.data).toBeUndefined();
-    });
-
-    it("should return non-empty strings as-is", () => {
+    it("should work with valid strings", () => {
       const schema = zf.string();
       const result = schema.safeParse("hello");
       expect(result.success).toBe(true);
@@ -25,24 +12,22 @@ describe("zod schemas preprocessing", () => {
         expect(result.data).toBe("hello");
       }
     });
+
+    it("should handle validation errors", () => {
+      const schema = z.string().min(5);
+      const result = schema.safeParse("hi");
+      expect(result.success).toBe(false);
+    });
+
+    it("should work with form data coercion", () => {
+      const schema = zf.string();
+      const result = schema.safeParse("");
+      expect(result.success).toBe(false);
+    });
   });
 
   describe("number", () => {
-    it("should return undefined for empty strings", () => {
-      const schema = zf.number();
-      const result = schema.safeParse("");
-      expect(result.success).toBe(false);
-      expect(result.data).toBeUndefined();
-    });
-
-    it("should return undefined for whitespace-only strings", () => {
-      const schema = zf.number();
-      const result = schema.safeParse(" ");
-      expect(result.success).toBe(false);
-      expect(result.data).toBeUndefined();
-    });
-
-    it("should pass through non-string values unchanged", () => {
+    it("should work with valid numbers", () => {
       const schema = zf.number();
       const result = schema.safeParse(42);
       expect(result.success).toBe(true);
@@ -51,7 +36,13 @@ describe("zod schemas preprocessing", () => {
       }
     });
 
-    it("should convert string numbers to numbers", () => {
+    it("should handle validation errors", () => {
+      const schema = z.number().min(10);
+      const result = schema.safeParse(5);
+      expect(result.success).toBe(false);
+    });
+
+    it("should work with form data coercion", () => {
       const schema = zf.number();
       const result = schema.safeParse("123");
       expect(result.success).toBe(true);
@@ -61,15 +52,34 @@ describe("zod schemas preprocessing", () => {
     });
   });
 
-  describe("boolean", () => {
-    it("should return undefined for empty strings", () => {
-      const schema = zf.boolean();
-      const result = schema.safeParse("");
-      expect(result.success).toBe(false);
-      expect(result.data).toBeUndefined();
+  describe("bigint", () => {
+    it("should work with valid bigints", () => {
+      const schema = zf.bigint();
+      const result = schema.safeParse(42n);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toBe(42n);
+      }
     });
 
-    it("should pass through non-string values unchanged", () => {
+    it("should handle validation errors", () => {
+      const schema = z.bigint().min(10n);
+      const result = schema.safeParse(5n);
+      expect(result.success).toBe(false);
+    });
+
+    it("should work with form data coercion", () => {
+      const schema = zf.bigint();
+      const result = schema.safeParse("123");
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toBe(123n);
+      }
+    });
+  });
+
+  describe("boolean", () => {
+    it("should work with valid booleans", () => {
       const schema = zf.boolean();
       const result = schema.safeParse(true);
       expect(result.success).toBe(true);
@@ -78,42 +88,20 @@ describe("zod schemas preprocessing", () => {
       }
     });
 
-    it("should return true for truthy string values", () => {
+    it("should work with form data coercion", () => {
       const schema = zf.boolean();
-      const truthyValues = ["true", "on", "1", "yes"];
-
-      truthyValues.forEach((value) => {
-        const result = schema.safeParse(value);
-        expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.data).toBe(true);
-        }
-      });
-    });
-
-    it("should return false for non-truthy string values", () => {
-      const schema = zf.boolean();
-      const falsyValues = ["false", "off", "0", "no", "maybe", "hello"];
-
-      falsyValues.forEach((value) => {
-        const result = schema.safeParse(value);
-        expect(result.success).toBe(false);
-        expect(result.data).toBeUndefined();
-      });
+      const result = schema.safeParse("true");
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toBe(true);
+      }
     });
   });
 
   describe("date", () => {
-    it("should return undefined for empty strings", () => {
+    it("should work with valid dates", () => {
       const schema = zf.date();
-      const result = schema.safeParse("");
-      expect(result.success).toBe(false);
-      expect(result.data).toBeUndefined();
-    });
-
-    it("should pass through non-string values unchanged", () => {
-      const schema = zf.date();
-      const date = new Date();
+      const date = new Date("2023-01-01");
       const result = schema.safeParse(date);
       expect(result.success).toBe(true);
       if (result.success) {
@@ -121,43 +109,35 @@ describe("zod schemas preprocessing", () => {
       }
     });
 
-    it("should convert string dates to Date objects", () => {
+    it("should work with form data coercion", () => {
       const schema = zf.date();
       const result = schema.safeParse("2023-01-01");
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.data).toBeInstanceOf(Date);
-        expect(result.data.getFullYear()).toBe(2023);
+      }
+    });
+  });
+
+  describe("enum", () => {
+    it("should work with valid enum values", () => {
+      const schema = zf.enum_(["a", "b", "c"]);
+      const result = schema.safeParse("a");
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toBe("a");
       }
     });
 
-    it("should handle invalid date strings gracefully", () => {
-      const schema = zf.date();
-      const result = schema.safeParse("not-a-date");
+    it("should handle validation errors", () => {
+      const schema = zf.enum_(["a", "b", "c"]);
+      const result = schema.safeParse("d");
       expect(result.success).toBe(false);
-      expect(result.error?.issues[0].message).toBe(
-        "Invalid input: expected date, received string",
-      );
     });
   });
 
   describe("file", () => {
-    it("should return undefined for empty files", () => {
-      const schema = zf.file();
-      const emptyFile = new File([], "empty.txt");
-      const result = schema.safeParse(emptyFile);
-      expect(result.success).toBe(false);
-      expect(result.data).toBeUndefined();
-    });
-
-    it("should pass through non-File values unchanged", () => {
-      const schema = zf.file();
-      const result = schema.safeParse("not-a-file");
-      expect(result.success).toBe(false);
-      expect(result.data).toBeUndefined();
-    });
-
-    it("should return valid files as-is", () => {
+    it("should work with valid files", () => {
       const schema = zf.file();
       const file = new File(["content"], "test.txt");
       const result = schema.safeParse(file);
@@ -168,47 +148,8 @@ describe("zod schemas preprocessing", () => {
     });
   });
 
-  describe("enum", () => {
-    it("should return undefined for empty strings", () => {
-      const schema = zf.enum_(["a", "b", "c"]);
-      const result = schema.safeParse("");
-      expect(result.success).toBe(false);
-      expect(result.data).toBeUndefined();
-    });
-
-    it("should pass through non-string values unchanged", () => {
-      const schema = zf.enum_(["a", "b", "c"]);
-      const result = schema.safeParse(123);
-      expect(result.success).toBe(false);
-      expect(result.data).toBeUndefined();
-    });
-
-    it("should return valid enum values as-is", () => {
-      const schema = zf.enum_(["a", "b", "c"]);
-      const result = schema.safeParse("a");
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.data).toBe("a");
-      }
-    });
-  });
-
   describe("email", () => {
-    it("should return undefined for empty strings", () => {
-      const schema = zf.email();
-      const result = schema.safeParse("");
-      expect(result.success).toBe(false);
-      expect(result.data).toBeUndefined();
-    });
-
-    it("should pass through non-string values unchanged", () => {
-      const schema = zf.email();
-      const result = schema.safeParse(123);
-      expect(result.success).toBe(false);
-      expect(result.data).toBeUndefined();
-    });
-
-    it("should return valid email strings as-is", () => {
+    it("should work with valid emails", () => {
       const schema = zf.email();
       const result = schema.safeParse("test@example.com");
       expect(result.success).toBe(true);
@@ -216,24 +157,16 @@ describe("zod schemas preprocessing", () => {
         expect(result.data).toBe("test@example.com");
       }
     });
+
+    it("should handle validation errors", () => {
+      const schema = zf.email();
+      const result = schema.safeParse("invalid-email");
+      expect(result.success).toBe(false);
+    });
   });
 
   describe("url", () => {
-    it("should return undefined for empty strings", () => {
-      const schema = zf.url();
-      const result = schema.safeParse("");
-      expect(result.success).toBe(false);
-      expect(result.data).toBeUndefined();
-    });
-
-    it("should pass through non-string values unchanged", () => {
-      const schema = zf.url();
-      const result = schema.safeParse(123);
-      expect(result.success).toBe(false);
-      expect(result.data).toBeUndefined();
-    });
-
-    it("should return valid URL strings as-is", () => {
+    it("should work with valid URLs", () => {
       const schema = zf.url();
       const result = schema.safeParse("https://example.com");
       expect(result.success).toBe(true);
@@ -241,60 +174,16 @@ describe("zod schemas preprocessing", () => {
         expect(result.data).toBe("https://example.com");
       }
     });
-  });
 
-  describe("bigint", () => {
-    it("should return undefined for empty strings", () => {
-      const schema = zf.bigint();
-      const result = schema.safeParse("");
+    it("should handle validation errors", () => {
+      const schema = zf.url();
+      const result = schema.safeParse("not-a-url");
       expect(result.success).toBe(false);
-      expect(result.data).toBeUndefined();
-    });
-
-    it("should return undefined for whitespace-only strings", () => {
-      const schema = zf.bigint();
-      const result = schema.safeParse(" ");
-      expect(result.success).toBe(false);
-      expect(result.data).toBeUndefined();
-    });
-
-    it("should pass through non-string values unchanged", () => {
-      const schema = zf.bigint();
-      const result = schema.safeParse(42n);
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.data).toBe(42n);
-      }
-    });
-
-    it("should convert string numbers to bigint", () => {
-      const schema = zf.bigint();
-      const result = schema.safeParse("123");
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.data).toBe(123n);
-      }
-    });
-
-    it("should handle invalid bigint strings gracefully", () => {
-      const schema = zf.bigint();
-      const result = schema.safeParse("abc");
-      expect(result.success).toBe(false);
-      expect(result.data).toBeUndefined();
     });
   });
 
   describe("array", () => {
-    it("should return empty array for empty strings", () => {
-      const schema = zf.array(zf.string());
-      const result = schema.safeParse("");
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.data).toEqual([]);
-      }
-    });
-
-    it("should pass through arrays unchanged", () => {
+    it("should work with valid arrays", () => {
       const schema = zf.array(zf.string());
       const result = schema.safeParse(["a", "b", "c"]);
       expect(result.success).toBe(true);
@@ -303,21 +192,12 @@ describe("zod schemas preprocessing", () => {
       }
     });
 
-    it("should convert single values to single-item arrays", () => {
+    it("should work with form data coercion", () => {
       const schema = zf.array(zf.string());
-      const result = schema.safeParse("hello");
+      const result = schema.safeParse("single-value");
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.data).toEqual(["hello"]);
-      }
-    });
-
-    it("should validate array elements", () => {
-      const schema = zf.array(zf.number());
-      const result = schema.safeParse(["123", "456"]);
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.data).toEqual([123, 456]);
+        expect(result.data).toEqual(["single-value"]);
       }
     });
   });

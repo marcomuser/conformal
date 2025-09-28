@@ -1,5 +1,13 @@
 # conformal
 
+## 2.1.1
+
+### Patch Changes
+
+- [#39](https://github.com/marcomuser/conformal/pull/39) [`76d370d`](https://github.com/marcomuser/conformal/commit/76d370dc71027ce45c044c6f9d7e0116e83383ef) Thanks [@marcomuser](https://github.com/marcomuser)! - Align coerceNumber invalid input handling
+
+- [#39](https://github.com/marcomuser/conformal/pull/39) [`76d370d`](https://github.com/marcomuser/conformal/commit/76d370dc71027ce45c044c6f9d7e0116e83383ef) Thanks [@marcomuser](https://github.com/marcomuser)! - Refactored valibot utilities from schemas to composable coercion pipes for form input preprocessing.
+
 ## 2.1.0
 
 ### Minor Changes

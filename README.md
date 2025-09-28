@@ -69,7 +69,7 @@ That's it! Conformal automatically handles FormData parsing, type coercion, and 
 - **[`serialize`](src/README.md#serialize)** - Transform typed values back to form-compatible strings
 - **[`getPath`](src/README.md#getpath)** - Safely access nested values using dot/bracket notation
 - **[`setPath`](src/README.md#setpath)** - Immutably set nested values using dot/bracket notation
-- **[`coerceX`](src/README.md#coerce-functions)** - A set of coercion functions for building custom schemas
+- **[`coerceX`](src/README.md#coerce-functions)** - A set of coercion functions for use with schema libraries
 
 ### Types
 
@@ -80,7 +80,7 @@ That's it! Conformal automatically handles FormData parsing, type coercion, and 
 
 > ⚠️ **Experimental**: These utilities are still in development and may change.
 
-- **[Valibot Field Schemas](src/valibot/README.md#field-schemas)** - Valibot schemas with automatic form input preprocessing
+- **[Coercion Pipes](src/valibot/README.md#coercion-pipes)** - Pipes for automatic form input preprocessing
 
 ## License
 

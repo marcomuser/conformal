@@ -20,7 +20,7 @@ cd examples/svelte && npm i && npm run dev
 ## Public API
 
 - `conformal`: `getPath`, `setPath`, `decode`, `parseFormData`, `serialize`, `coerceString`, `coerceNumber`, `coerceBigint`, `coerceBoolean`, `coerceDate`, `coerceFile`, `coerceArray`; types: `PathsFromObject`, `Submission`
-- `conformal/valibot`: `string`, `number`, `boolean`, `date`, `bigint`, `picklist`, `file`, `array` (experimental)
+- `conformal/valibot`: `coerceString`, `coerceNumber`, `coerceBoolean`, `coerceDate`, `coerceBigint`, `coerceFile`, `coerceArray` (experimental)
 - `conformal/zod`: `string`, `number`, `boolean`, `date`, `bigint`, `enum`, `file`, `url`, `email`, `object`, `array` (deprecated)
 
 Exports live in `src/index.ts`, `src/valibot/index.ts`, and `src/zod/index.ts`.
@@ -53,6 +53,6 @@ npx vitest run test/parse.test.ts
 
 ## Quick playbooks
 
-- Add a Zod helper: edit `src/zod/schemas.ts`, re-export in `src/zod/index.ts`, add tests in `test/zod/`, update README's Zod section.
+- Add a Valibot coercion pipe: edit `src/valibot/coerce.ts`, re-export in `src/valibot/index.ts`, add tests in `test/valibot/coerce.test.ts`, update README's Valibot section.
 - Fix path bug: add failing test in `test/path.test.ts`, update `src/path.ts` (immutability + guards), run full checks.
 - Public API change: update `src/index.ts`, tests, README; keep exports stable.

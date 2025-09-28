@@ -5,7 +5,6 @@ import {
   coerceBigint,
   coerceBoolean,
   coerceDate,
-  coercePicklist,
   coerceFile,
   coerceArray,
 } from "../coerce.js";
@@ -46,7 +45,7 @@ export function picklist<
 >(options: TOptions, message?: TMessage) {
   return v.pipe(
     v.unknown(),
-    v.transform(coercePicklist),
+    v.transform(coerceString),
     v.picklist(options, message),
   );
 }

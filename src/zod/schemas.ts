@@ -5,7 +5,6 @@ import {
   coerceBigint,
   coerceBoolean,
   coerceDate,
-  coercePicklist,
   coerceFile,
   coerceArray,
 } from "../coerce.js";
@@ -34,7 +33,7 @@ export function enum_<const T extends readonly string[]>(
   values: T,
   params?: Parameters<typeof z.enum>[1],
 ) {
-  return z.preprocess(coercePicklist, z.enum(values, params));
+  return z.preprocess(coerceString, z.enum(values, params));
 }
 
 export function file(params?: Parameters<typeof z.file>[0]) {

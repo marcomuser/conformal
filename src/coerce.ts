@@ -60,16 +60,6 @@ export function coerceDate(input: unknown): unknown {
   return Number.isNaN(date.getTime()) ? input : date;
 }
 
-export function coercePicklist(input: unknown): unknown {
-  if (typeof input !== "string") {
-    return input;
-  }
-  if (input === "") {
-    return undefined;
-  }
-  return input;
-}
-
 export function coerceFile(input: unknown): unknown {
   if (!(input instanceof File)) {
     return input;

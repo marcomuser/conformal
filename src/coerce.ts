@@ -16,7 +16,8 @@ export function coerceNumber(input: unknown): unknown {
   if (input.trim() === "") {
     return undefined;
   }
-  return Number(input);
+  const number = Number(input);
+  return Number.isNaN(number) ? input : number;
 }
 
 export function coerceBigint(input: unknown): unknown {

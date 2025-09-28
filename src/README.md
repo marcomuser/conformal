@@ -117,7 +117,7 @@ const newObj = setPath({ a: { b: { c: [] } } }, "a.b.c[1]", "hey");
 
 ## Coerce Functions
 
-The coerce functions provide utilities for converting form input values to their expected types. These functions are essential for building custom schema implementations (like zod or valibot schemas) where you need to transform string-based form data into proper JavaScript types before validation. All coerce functions handle empty strings by returning `undefined` and pass through non-matching types unchanged, making them safe to use in schema transformation pipelines.
+The coerce functions provide utilities for converting form input values to their expected types. These functions are essential for building schema library (e.g. zod) utilities to transform string-based form data into proper JavaScript types before validation. All coerce functions handle empty strings by returning `undefined` and pass through non-matching types unchanged, making them safe to use in schema transformation pipelines.
 
 ### coerceString
 
@@ -142,7 +142,7 @@ console.log(coerceNumber("42")); // 42
 console.log(coerceNumber("3.14")); // 3.14
 console.log(coerceNumber("")); // undefined
 console.log(coerceNumber(" ")); // undefined
-console.log(coerceNumber("abc")); // NaN
+console.log(coerceNumber("abc")); // "abc" (unchanged)
 ```
 
 ### coerceBigint
@@ -155,6 +155,7 @@ import { coerceBigint } from "conformal";
 console.log(coerceBigint("42")); // 42n
 console.log(coerceBigint("9007199254740991")); // 9007199254740991n
 console.log(coerceBigint("")); // undefined
+console.log(coerceNumber(" ")); // undefined
 console.log(coerceBigint("abc")); // "abc" (unchanged)
 ```
 

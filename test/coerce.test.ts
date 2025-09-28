@@ -47,9 +47,9 @@ describe("coerce functions", () => {
       expect(coerceNumber("-10")).toBe(-10);
     });
 
-    it("should return NaN for invalid number strings", () => {
-      expect(coerceNumber("abc")).toBeNaN();
-      expect(coerceNumber("12.34.56")).toBeNaN();
+    it("should return original string for invalid number strings", () => {
+      expect(coerceNumber("abc")).toBe("abc");
+      expect(coerceNumber("12.34.56")).toBe("12.34.56");
     });
   });
 

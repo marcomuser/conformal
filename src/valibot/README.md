@@ -6,7 +6,7 @@ The Valibot Utilities are provided under the `conformal/valibot` subpath. Valibo
 
 ## Field Schemas
 
-Conformal's field schemas are preprocessing wrappers that handle common form input patterns automatically. They convert empty strings to `undefined`, coerce string inputs to appropriate types (numbers, dates, booleans), and handle `File` objects. They're fully compatible with Valibot and can be mixed with regular Valibot schemas.
+These field schemas are preprocessing wrappers that handle common form input patterns automatically by using conformal's set of coerce functions internally. They convert empty strings to `undefined`, coerce string inputs to appropriate types (numbers, dates, booleans), and handle `File` objects. They're fully compatible with Valibot and can be mixed with regular Valibot schemas.
 
 ```typescript
 import * as vf from "conformal/valibot";

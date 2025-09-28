@@ -6,7 +6,7 @@ The Valibot Utilities are provided under the `conformal/valibot` subpath. Valibo
 
 ## Coercion Pipes
 
-These coercion pipes handle the conversion from `FormDataEntryValue` to clean types. They convert empty strings to `undefined`, coerce string inputs to appropriate types (numbers, dates, booleans), and handle `File` objects. They're composable pipes that can be combined with any valibot validation schema using `v.pipe()`.
+These coercion pipes handle the conversion from form input values to rich JS types. They convert empty strings to `undefined`, coerce string inputs to appropriate types (numbers, dates, booleans), and handle `File` objects. They're composable pipes that can be combined with any valibot validation schema using `v.pipe()`.
 
 ```typescript
 import * as vf from "conformal/valibot";

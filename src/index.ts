@@ -3,3 +3,12 @@ export { decode } from "./decode.js";
 export { parseFormData } from "./parse.js";
 export { serialize } from "./serialize.js";
 export type { PathsFromObject, Submission } from "./types.js";
+export {
+  coerceArray,
+  coerceBigint,
+  coerceBoolean,
+  coerceDate,
+  coerceFile,
+  coerceNumber,
+  coerceString,
+} from "./coerce.js";

@@ -28,7 +28,7 @@ Here's a quick example showing how Conformal handles form validation with a user
 
 ```typescript
 import { parseFormData } from "conformal";
-import * as z from "zod"; // Tip: Use conformal/zod for automatic form input preprocessing
+import * as z from "zod"; // Tip: Use conformal's coerce functions for form input preprocessing
 
 const schema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -75,11 +75,11 @@ That's it! Conformal automatically handles FormData parsing, type coercion, and 
 - **[`Submission`](src/README.md#submission)** - Standardized submission result with success/error states
 - **[`PathsFromObject`](src/README.md#pathsfromobject)** - Type utility to extract all possible object paths
 
-### Zod Utilities
+### Valibot Utilities
 
 > ⚠️ **Experimental**: These utilities are still in development and may change.
 
-- **[Zod Field Schemas](src/zod/README.md#field-schemas)** - Zod schemas with automatic form input preprocessing
+- **[Valibot Field Schemas](src/valibot/README.md#field-schemas)** - Valibot schemas with automatic form input preprocessing
 
 ## License
 

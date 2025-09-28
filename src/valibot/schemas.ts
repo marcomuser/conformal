@@ -71,12 +71,23 @@ export function boolean<
       if (input === "") {
         return undefined;
       }
-      return input === "true" ||
+      if (
+        input === "true" ||
         input === "on" ||
         input === "1" ||
         input === "yes"
-        ? true
-        : false;
+      ) {
+        return true;
+      }
+      if (
+        input === "false" ||
+        input === "off" ||
+        input === "0" ||
+        input === "no"
+      ) {
+        return false;
+      }
+      return input;
     }),
     v.boolean(message),
   );

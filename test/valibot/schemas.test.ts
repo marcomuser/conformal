@@ -99,9 +99,9 @@ describe("valibot schemas preprocessing", () => {
       });
     });
 
-    it("should return false for falsy string values", () => {
+    it("should return false for explicit falsy string values", () => {
       const schema = vf.boolean();
-      const falsyValues = ["false", "off", "0", "no", "maybe", "hello"];
+      const falsyValues = ["false", "off", "0", "no"];
 
       falsyValues.forEach((value) => {
         const result = v.safeParse(schema, value);
@@ -109,6 +109,17 @@ describe("valibot schemas preprocessing", () => {
         if (result.success) {
           expect(result.output).toBe(false);
         }
+      });
+    });
+
+    it("should fail validation for ambiguous string values", () => {
+      const schema = vf.boolean();
+      const ambiguousValues = ["maybe", "hello", "banana", "sometimes"];
+
+      ambiguousValues.forEach((value) => {
+        const result = v.safeParse(schema, value);
+        expect(result.success).toBe(false);
+        expect(result.output).toBe(value);
       });
     });
   });

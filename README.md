@@ -28,8 +28,9 @@ Here's a quick example showing how Conformal handles form validation with a user
 
 ```typescript
 import { parseFormData } from "conformal";
-import * as z from "zod"; // Tip: Use conformal's coerce functions for form input preprocessing
+import * as z from "zod";
 
+// Tip: Use conformal's coerce functions for form input preprocessing
 const schema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.email("Invalid email address"),

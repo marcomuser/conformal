@@ -155,7 +155,7 @@ import { coerceBigint } from "conformal";
 console.log(coerceBigint("42")); // 42n
 console.log(coerceBigint("9007199254740991")); // 9007199254740991n
 console.log(coerceBigint("")); // undefined
-console.log(coerceNumber(" ")); // undefined
+console.log(coerceBigint(" ")); // undefined
 console.log(coerceBigint("abc")); // "abc" (unchanged)
 ```
 

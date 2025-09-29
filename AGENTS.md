@@ -38,7 +38,7 @@ Exports live in `src/index.ts`, `src/valibot/index.ts`, and `src/zod/index.ts`.
 - TypeScript strict mode (see `tsconfig.json` flags).
 - ESM-only, isomorphic runtime (no Node-only APIs).
 - Prettier formatting: `npm run format:write`.
-- Keep runtime deps minimal; `zod` is an optional peer dependency.
+- Keep runtime deps minimal; `valibot` is an optional peer dependency.
 
 ## Build & test
 

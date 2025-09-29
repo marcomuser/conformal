@@ -13,7 +13,9 @@ export function coerceNumber(): v.SchemaWithPipe<
   return v.pipe(v.unknown(), v.transform(coerce.coerceNumber));
 }
 
-export function coerceBigint() {
+export function coerceBigint(): v.SchemaWithPipe<
+  readonly [v.UnknownSchema, v.TransformAction<unknown, unknown>]
+> {
   return v.pipe(v.unknown(), v.transform(coerce.coerceBigint));
 }
 

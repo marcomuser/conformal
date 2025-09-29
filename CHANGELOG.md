@@ -1,5 +1,11 @@
 # conformal
 
+## 2.1.2
+
+### Patch Changes
+
+- [#42](https://github.com/marcomuser/conformal/pull/42) [`4446e1c`](https://github.com/marcomuser/conformal/commit/4446e1c187013a8b2bb7f0516ff69802295a9ea1) Thanks [@marcomuser](https://github.com/marcomuser)! - Enable isolatedDeclarations in tsconfig
+
 ## 2.1.1
 
 ### Patch Changes

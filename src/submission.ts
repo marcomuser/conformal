@@ -25,7 +25,10 @@ export function toSubmission<Output>(
       };
 }
 
-export function getFormErrors(issues?: ReadonlyArray<StandardSchemaV1.Issue>) {
+export function getFormErrors(issues?: ReadonlyArray<StandardSchemaV1.Issue>): {
+  formErrors: string[];
+  fieldErrors: Record<string, string[]>;
+} {
   const formErrors: string[] = [];
   const fieldErrors: Record<string, string[]> = {};
 
